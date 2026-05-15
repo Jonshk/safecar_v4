@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="splash_bg">#080A0F</color>
+    <color name="primaryColor">#080A0F</color>
+    <color name="accentColor">#E8323C</color>
+    <color name="navBar">#0E1118</color>
+</resources>
