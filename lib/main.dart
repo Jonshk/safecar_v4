@@ -103,6 +103,36 @@ class _MainShellState extends State<MainShell> {
 
     return Scaffold(
       backgroundColor: AppTheme.bg,
+      // Toggle idioma arriba derecha
+      appBar: _idx == 0 ? AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        actions: [
+          GestureDetector(
+            onTap: () => context.read<LangProvider>().toggle(),
+            child: Container(
+              margin: const EdgeInsets.only(right: 14, top: 8, bottom: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppTheme.bgCard,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AppTheme.border),
+              ),
+              child: Text(
+                lang.isEs ? '🇺🇸 EN' : '🇲🇽 ES',
+                style: AppTheme.mono(11, w: FontWeight.w700),
+              ),
+            ),
+          ),
+        ],
+      ) : null,
+      // Carrito flotante animado
+      floatingActionButton: _idx != 3 ? _CartFAB(
+        count: cart.count,
+        onTap: () => _navigate(3),
+      ) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: IndexedStack(index: _idx, children: screens),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
@@ -194,6 +224,88 @@ class _CartNavItem extends StatelessWidget {
           const SizedBox(height: 3),
           Text(label, style: AppTheme.mono(9, w: FontWeight.w600, color: active ? AppTheme.red : AppTheme.white30)),
         ]),
+      ),
+    );
+  }
+}
+
+// ── Carrito flotante animado ──────────────────────────────────────
+class _CartFAB extends StatefulWidget {
+  final int count;
+  final VoidCallback onTap;
+  const _CartFAB({required this.count, required this.onTap});
+  @override
+  State<_CartFAB> createState() => _CartFABState();
+}
+
+class _CartFABState extends State<_CartFAB> with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _scale;
+  int _prevCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 350));
+    _scale = TweenSequence([
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.28).chain(CurveTween(curve: Curves.easeOut)), weight: 40),
+      TweenSequenceItem(tween: Tween(begin: 1.28, end: 1.0).chain(CurveTween(curve: Curves.elasticOut)), weight: 60),
+    ]).animate(_ctrl);
+  }
+
+  @override
+  void didUpdateWidget(_CartFAB old) {
+    super.didUpdateWidget(old);
+    if (widget.count != _prevCount && widget.count > 0) {
+      _ctrl.forward(from: 0);
+    }
+    _prevCount = widget.count;
+  }
+
+  @override
+  void dispose() { _ctrl.dispose(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (_, __) => Transform.scale(
+        scale: _scale.value,
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            width: 62, height: 62,
+            decoration: BoxDecoration(
+              color: AppTheme.red,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.red.withOpacity(0.45),
+                  blurRadius: 20, offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Stack(alignment: Alignment.center, children: [
+              const Icon(Icons.shopping_bag_rounded, color: Colors.white, size: 28),
+              if (widget.count > 0)
+                Positioned(
+                  top: 8, right: 8,
+                  child: Container(
+                    width: 18, height: 18,
+                    decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                    child: Center(
+                      child: Text(
+                        widget.count > 9 ? '9+' : '${widget.count}',
+                        style: const TextStyle(
+                          color: AppTheme.red, fontSize: 9, fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ]),
+          ),
+        ),
       ),
     );
   }

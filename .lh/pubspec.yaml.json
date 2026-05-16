@@ -1,0 +1,18 @@
+{
+    "sourceFile": "pubspec.yaml",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1778891935757,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1778891935757,
+            "name": "Commit-0",
+            "content": "name: safecar_app\ndescription: Safe Car Automotive — Chicago's Premier Auto Parts & Training Center\npublish_to: 'none'\nversion: 2.0.0+1\n\nenvironment:\n  sdk: '>=3.3.0 <4.0.0'\n\ndependencies:\n  flutter:\n    sdk: flutter\n  cupertino_icons: ^1.0.8\n  http: ^1.2.1\n  provider: ^6.1.2\n  go_router: ^14.2.7\n  shared_preferences: ^2.3.2\n  cached_network_image: ^3.4.1\n  shimmer: ^3.0.0\n  flutter_animate: ^4.5.0\n  badges: ^3.1.2\n  lottie: ^3.1.2\n  google_fonts: ^6.2.1\n  url_launcher: ^6.3.0\n  flutter_svg: ^2.0.10+1\n  intl: ^0.19.0\n  carousel_slider: ^5.0.0\n  smooth_page_indicator: ^1.1.0\n\ndev_dependencies:\n  flutter_test:\n    sdk: flutter\n  flutter_lints: ^4.0.0\n  flutter_launcher_icons: ^0.13.1\n\nflutter_launcher_icons:\n  android: true\n  ios: false\n  image_path: \"assets/images/icon.png\"\n  min_sdk_android: 21\n\nflutter:\n  uses-material-design: true\n  assets:\n    - assets/images/\n    - assets/images/splash_safe_car.png\n    - assets/images/icon.png\n"
+        }
+    ]
+}

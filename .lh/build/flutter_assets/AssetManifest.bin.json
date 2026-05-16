@@ -1,0 +1,18 @@
+{
+    "sourceFile": "build/flutter_assets/AssetManifest.bin",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1778891935755,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1778891935755,
+            "name": "Commit-0",
+            "content": "splash_safe_car.pngsplash_safe_car.png\r\n\u0005\u0007\u0016assets/images/icon.png\f\u0001\r\n\u0001\u0007\u0005asset\u0007\u0016assets/images/icon.png\u0007\u001aassets/images/icon_192.png\f\u0001\r\n\u0001\u0007\u0005asset\u0007\u001aassets/images/icon_192.png\u0007\u001aassets/images/icon_512.png\f\u0001\r\n\u0001\u0007\u0005asset\u0007\u001aassets/images/icon_512.png\u0007\u001cassets/images/splash_car.jpg\f\u0001\r\n\u0001\u0007\u0005asset\u0007\u001cassets/images/splash_car.jpg\u00072packages/cupertino_icons/assets/CupertinoIcons.ttf\f\u0001\r\n\u0001\u0007\u0005asset\u00072packages/cupertino_icons/assets/CupertinoIcons.ttf"
+        }
+    ]
+}

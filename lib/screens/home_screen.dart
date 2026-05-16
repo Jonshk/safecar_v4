@@ -38,19 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final lang = context.watch<LangProvider>();
     return Scaffold(
       backgroundColor: AppTheme.bg,
-      floatingActionButton: GestureDetector(
-        onTap: () => lang.toggle(),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          decoration: BoxDecoration(
-            color: AppTheme.bgCard,
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: AppTheme.border),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.4), blurRadius: 12, offset: const Offset(0, 4))],
-          ),
-          child: Text(lang.isEs ? '🇺🇸 EN' : '🇲🇽 ES', style: AppTheme.mono(12, w: FontWeight.w700)),
-        ),
-      ),
+
       body: RefreshIndicator(
         onRefresh: _load,
         color: AppTheme.red,

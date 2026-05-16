@@ -112,7 +112,7 @@ class _SplashScreenState extends State<SplashScreen>
             opacity: _bgOpacity.value,
             child: SizedBox.expand(
               child: Image.asset(
-                'assets/images/splash_car.jpg',
+                'assets/images/splash_safe_car.png',
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
               ),
