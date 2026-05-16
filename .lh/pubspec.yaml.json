@@ -3,11 +3,19 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1778891935757,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1778895708264,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,8 +20,9 @@\n   badges: ^3.1.2\n   lottie: ^3.1.2\n   google_fonts: ^6.2.1\n   url_launcher: ^6.3.0\n+  flutter_stripe: ^11.1.0\n   flutter_svg: ^2.0.10+1\n   intl: ^0.19.0\n   carousel_slider: ^5.0.0\n   smooth_page_indicator: ^1.1.0\n@@ -43,4 +44,6 @@\n   assets:\n     - assets/images/\n     - assets/images/splash_safe_car.png\n     - assets/images/icon.png\n+    - assets/images/splash_car.jpg\n+    - assets/images/icon.png\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1778895807070,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -44,6 +44,4 @@\n   assets:\n     - assets/images/\n     - assets/images/splash_safe_car.png\n     - assets/images/icon.png\n-    - assets/images/splash_car.jpg\n-    - assets/images/icon.png\n\\ No newline at end of file\n"
                 }
             ],
             "date": 1778891935757,

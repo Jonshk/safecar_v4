@@ -11,20 +11,22 @@ import 'package:provider/provider.dart';
 class ShimmerBox extends StatelessWidget {
   final double w, h;
   final double radius;
-  const ShimmerBox({super.key, required this.w, required this.h, this.radius = 12});
+  const ShimmerBox(
+      {super.key, required this.w, required this.h, this.radius = 12});
 
   @override
   Widget build(BuildContext context) => Shimmer.fromColors(
-    baseColor: AppTheme.bgElevated,
-    highlightColor: AppTheme.surface,
-    child: Container(
-      width: w, height: h,
-      decoration: BoxDecoration(
-        color: AppTheme.bgElevated,
-        borderRadius: BorderRadius.circular(radius),
-      ),
-    ),
-  );
+        baseColor: AppTheme.bgElevated,
+        highlightColor: AppTheme.surface,
+        child: Container(
+          width: w,
+          height: h,
+          decoration: BoxDecoration(
+            color: AppTheme.bgElevated,
+            borderRadius: BorderRadius.circular(radius),
+          ),
+        ),
+      );
 }
 
 // ── Network Image ────────────────────────────────────────────────
@@ -34,7 +36,8 @@ class NetImage extends StatelessWidget {
   final BoxFit fit;
   final BorderRadius? radius;
 
-  const NetImage(this.url, {super.key, this.w, this.h, this.fit = BoxFit.cover, this.radius});
+  const NetImage(this.url,
+      {super.key, this.w, this.h, this.fit = BoxFit.cover, this.radius});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,9 @@ class NetImage extends StatelessWidget {
       borderRadius: radius ?? BorderRadius.zero,
       child: CachedNetworkImage(
         imageUrl: url,
-        width: w, height: h, fit: fit,
+        width: w,
+        height: h,
+        fit: fit,
         placeholder: (_, __) => ShimmerBox(w: w ?? 100, h: h ?? 100),
         errorWidget: (_, __, ___) => _placeholder(),
       ),
@@ -51,10 +56,12 @@ class NetImage extends StatelessWidget {
   }
 
   Widget _placeholder() => Container(
-    width: w, height: h,
-    color: AppTheme.bgElevated,
-    child: const Icon(Icons.car_repair_outlined, color: AppTheme.white30, size: 28),
-  );
+        width: w,
+        height: h,
+        color: AppTheme.bgElevated,
+        child: const Icon(Icons.car_repair_outlined,
+            color: AppTheme.white30, size: 28),
+      );
 }
 
 // ── Part Card ────────────────────────────────────────────────────
@@ -63,7 +70,8 @@ class PartCard extends StatelessWidget {
   final VoidCallback onTap;
   final int index;
 
-  const PartCard({super.key, required this.part, required this.onTap, this.index = 0});
+  const PartCard(
+      {super.key, required this.part, required this.onTap, this.index = 0});
 
   @override
   Widget build(BuildContext context) {
@@ -83,24 +91,29 @@ class PartCard extends StatelessWidget {
           children: [
             // Image
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(20)),
               child: Stack(
                 children: [
                   NetImage(
                     part.displayImage,
-                    w: double.infinity, h: 130,
+                    w: double.infinity,
+                    h: 130,
                   ),
                   // Stock badge
                   if (!part.inStock)
                     Positioned(
-                      top: 10, left: 10,
+                      top: 10,
+                      left: 10,
                       child: _badge('OUT OF STOCK', AppTheme.redDim),
                     ),
                   // Category badge
                   if (part.category != null)
                     Positioned(
-                      top: 10, right: 10,
-                      child: _badge(part.category!.toUpperCase(), AppTheme.surface),
+                      top: 10,
+                      right: 10,
+                      child: _badge(
+                          part.category!.toUpperCase(), AppTheme.surface),
                     ),
                 ],
               ),
@@ -111,9 +124,11 @@ class PartCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(part.name,
+                  Text(
+                    part.name,
                     style: AppTheme.display(14, w: FontWeight.w700),
-                    maxLines: 2, overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
                   Row(
@@ -121,7 +136,8 @@ class PartCard extends StatelessWidget {
                     children: [
                       Text(
                         '\$${part.price.toStringAsFixed(2)}',
-                        style: AppTheme.mono(18, w: FontWeight.w700, color: AppTheme.red),
+                        style: AppTheme.mono(18,
+                            w: FontWeight.w700, color: AppTheme.red),
                       ),
                       _AddBtn(part: part, inCart: inCart),
                     ],
@@ -132,16 +148,20 @@ class PartCard extends StatelessWidget {
           ],
         ),
       ),
-    ).animate(delay: Duration(milliseconds: 60 * index))
-     .fadeIn(duration: 400.ms)
-     .slideY(begin: 0.15, end: 0, curve: Curves.easeOutCubic);
+    )
+        .animate(delay: Duration(milliseconds: 60 * index))
+        .fadeIn(duration: 400.ms)
+        .slideY(begin: 0.15, end: 0, curve: Curves.easeOutCubic);
   }
 
   Widget _badge(String text, Color bg) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
-    child: Text(text, style: AppTheme.mono(9, w: FontWeight.w700, color: AppTheme.white80)),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration:
+            BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
+        child: Text(text,
+            style:
+                AppTheme.mono(9, w: FontWeight.w700, color: AppTheme.white80)),
+      );
 }
 
 class _AddBtn extends StatefulWidget {
@@ -159,11 +179,15 @@ class _AddBtnState extends State<_AddBtn> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 200));
   }
 
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,10 +199,11 @@ class _AddBtnState extends State<_AddBtn> with SingleTickerProviderStateMixin {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${widget.part.name} added to cart',
-              style: AppTheme.body(13, color: AppTheme.white)),
+                style: AppTheme.body(13, color: AppTheme.white)),
             backgroundColor: AppTheme.bgElevated,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             duration: const Duration(seconds: 1),
           ),
         );
@@ -188,14 +213,16 @@ class _AddBtnState extends State<_AddBtn> with SingleTickerProviderStateMixin {
         builder: (_, __) => Transform.scale(
           scale: 1.0 - (_ctrl.value * 0.15),
           child: Container(
-            width: 36, height: 36,
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
               color: widget.inCart ? AppTheme.redGlow : AppTheme.red,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               widget.inCart ? Icons.check_rounded : Icons.add_rounded,
-              color: AppTheme.white, size: 20,
+              color: AppTheme.white,
+              size: 20,
             ),
           ),
         ),
@@ -210,7 +237,8 @@ class CourseCard extends StatelessWidget {
   final VoidCallback onTap;
   final int index;
 
-  const CourseCard({super.key, required this.course, required this.onTap, this.index = 0});
+  const CourseCard(
+      {super.key, required this.course, required this.onTap, this.index = 0});
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +255,8 @@ class CourseCard extends StatelessWidget {
           children: [
             // Image
             ClipRRect(
-              borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
+              borderRadius:
+                  const BorderRadius.horizontal(left: Radius.circular(20)),
               child: NetImage(course.imageUrl ?? '', w: 110, h: 110),
             ),
             // Info
@@ -240,30 +269,37 @@ class CourseCard extends StatelessWidget {
                     if (course.level != null)
                       Container(
                         margin: const EdgeInsets.only(bottom: 6),
-                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 7, vertical: 3),
                         decoration: BoxDecoration(
                           color: AppTheme.amberGlow,
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Text(course.level!.toUpperCase(),
-                          style: AppTheme.mono(8, w: FontWeight.w700, color: AppTheme.amber)),
+                            style: AppTheme.mono(8,
+                                w: FontWeight.w700, color: AppTheme.amber)),
                       ),
                     Text(course.title,
-                      style: AppTheme.display(14, w: FontWeight.w700),
-                      maxLines: 2, overflow: TextOverflow.ellipsis),
+                        style: AppTheme.display(14, w: FontWeight.w700),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (course.duration != null)
                           Row(children: [
-                            const Icon(Icons.schedule_outlined, size: 13, color: AppTheme.white60),
+                            const Icon(Icons.schedule_outlined,
+                                size: 13, color: AppTheme.white60),
                             const SizedBox(width: 4),
-                            Text(course.duration!, style: AppTheme.body(12, color: AppTheme.white60)),
+                            Text(course.duration!,
+                                style:
+                                    AppTheme.body(12, color: AppTheme.white60)),
                           ]),
                         if (course.price != null)
                           Text('\$${course.price!.toStringAsFixed(0)}',
-                            style: AppTheme.mono(15, w: FontWeight.w700, color: AppTheme.red)),
+                              style: AppTheme.mono(15,
+                                  w: FontWeight.w700, color: AppTheme.red)),
                       ],
                     ),
                   ],
@@ -273,9 +309,10 @@ class CourseCard extends StatelessWidget {
           ],
         ),
       ),
-    ).animate(delay: Duration(milliseconds: 80 * index))
-     .fadeIn(duration: 400.ms)
-     .slideX(begin: 0.1, end: 0, curve: Curves.easeOutCubic);
+    )
+        .animate(delay: Duration(milliseconds: 80 * index))
+        .fadeIn(duration: 400.ms)
+        .slideX(begin: 0.1, end: 0, curve: Curves.easeOutCubic);
   }
 }
 
@@ -305,12 +342,18 @@ class RedButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppTheme.red,
           borderRadius: BorderRadius.circular(radius),
-          boxShadow: [BoxShadow(color: AppTheme.redGlow, blurRadius: 20, offset: const Offset(0, 6))],
+          boxShadow: const [
+            BoxShadow(
+                color: AppTheme.redGlow, blurRadius: 20, offset: Offset(0, 6))
+          ],
         ),
         child: Center(
           child: loading
-              ? const SizedBox(width: 22, height: 22,
-                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+              ? const SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(
+                      color: Colors.white, strokeWidth: 2))
               : Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -318,7 +361,8 @@ class RedButton extends StatelessWidget {
                       Icon(icon, color: AppTheme.white, size: 18),
                       const SizedBox(width: 8),
                     ],
-                    Text(label, style: AppTheme.display(15, w: FontWeight.w700)),
+                    Text(label,
+                        style: AppTheme.display(15, w: FontWeight.w700)),
                   ],
                 ),
         ),
@@ -333,7 +377,8 @@ class SectionHeader extends StatelessWidget {
   final String? action;
   final VoidCallback? onAction;
 
-  const SectionHeader({super.key, required this.label, this.action, this.onAction});
+  const SectionHeader(
+      {super.key, required this.label, this.action, this.onAction});
 
   @override
   Widget build(BuildContext context) {
@@ -342,7 +387,9 @@ class SectionHeader extends StatelessWidget {
       children: [
         Row(
           children: [
-            Container(width: 3, height: 18,
+            Container(
+              width: 3,
+              height: 18,
               decoration: BoxDecoration(
                 color: AppTheme.red,
                 borderRadius: BorderRadius.circular(2),
@@ -356,7 +403,8 @@ class SectionHeader extends StatelessWidget {
           GestureDetector(
             onTap: onAction,
             child: Text(action!,
-              style: AppTheme.mono(12, color: AppTheme.red, w: FontWeight.w600)),
+                style:
+                    AppTheme.mono(12, color: AppTheme.red, w: FontWeight.w600)),
           ),
       ],
     );
@@ -376,12 +424,16 @@ class CartIconBadge extends StatelessWidget {
         const Icon(Icons.shopping_bag_outlined, size: 26),
         if (count > 0)
           Positioned(
-            top: -4, right: -4,
+            top: -4,
+            right: -4,
             child: Container(
-              width: 16, height: 16,
-              decoration: const BoxDecoration(color: AppTheme.red, shape: BoxShape.circle),
-              child: Center(child: Text('$count',
-                style: AppTheme.mono(9, w: FontWeight.w800))),
+              width: 16,
+              height: 16,
+              decoration: const BoxDecoration(
+                  color: AppTheme.red, shape: BoxShape.circle),
+              child: Center(
+                  child: Text('$count',
+                      style: AppTheme.mono(9, w: FontWeight.w800))),
             ).animate().scale(duration: 200.ms, curve: Curves.elasticOut),
           ),
       ],

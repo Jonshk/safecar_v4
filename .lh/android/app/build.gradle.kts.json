@@ -1,0 +1,18 @@
+{
+    "sourceFile": "android/app/build.gradle.kts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1778926869432,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1778926869432,
+            "name": "Commit-0",
+            "content": "android {\r\n    namespace \"com.safecar.safecar_app\"\r\n    compileSdkVersion 34\r\n\r\n    defaultConfig {\r\n        applicationId \"com.safecar.safecar_app\"\r\n        minSdkVersion 21\r\n        targetSdkVersion 34\r\n        versionCode 2\r\n        versionName \"2.0.0\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            signingConfig signingConfigs.debug\r\n            minifyEnabled true\r\n            shrinkResources true\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n}\r\n\r\nflutter {\r\n    source '../..'\r\n}"
+        }
+    ]
+}

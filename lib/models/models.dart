@@ -1,4 +1,4 @@
-// ── Part ────────────────────────────────────────────────────────
+// ── Part ─────────────────────────────────────────────────────────
 class Part {
   final int id;
   final String name;
@@ -9,32 +9,34 @@ class Part {
   final String? category;
   final int? stock;
   final String? sku;
+  final String? brand;
 
-  const Part({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.price,
-    this.imageUrl,
-    this.thumbUrl,
-    this.category,
-    this.stock,
-    this.sku,
-  });
+  const Part(
+      {required this.id,
+      required this.name,
+      required this.description,
+      required this.price,
+      this.imageUrl,
+      this.thumbUrl,
+      this.category,
+      this.stock,
+      this.sku,
+      this.brand});
 
   factory Part.fromJson(Map<String, dynamic> j) => Part(
-    id: j['id'] ?? 0,
-    name: j['name'] ?? '',
-    description: j['description'] ?? '',
-    price: (j['price'] ?? 0).toDouble(),
-    imageUrl: j['image_url'],
-    thumbUrl: j['thumb_url'],
-    category: j['category'],
-    stock: j['stock'],
-    sku: j['sku'],
-  );
+        id: j['id'] ?? 0,
+        name: j['name'] ?? '',
+        description: j['description'] ?? '',
+        price: (j['price'] ?? 0).toDouble(),
+        imageUrl: j['image_url'],
+        thumbUrl: j['thumb_url'],
+        category: j['category'],
+        stock: j['stock'],
+        sku: j['sku'],
+        brand: j['brand'],
+      );
 
-  String get displayImage => thumbUrl ?? imageUrl ?? '';
+  String get displayImage => imageUrl ?? thumbUrl ?? '';
   bool get inStock => (stock ?? 1) > 0;
 }
 
@@ -51,64 +53,92 @@ class Course {
   final String? imageUrl;
   final String? category;
 
-  const Course({
-    required this.id,
-    required this.title,
-    this.titleEs,
-    required this.description,
-    this.descriptionEs,
-    this.price,
-    this.duration,
-    this.level,
-    this.imageUrl,
-    this.category,
-  });
+  const Course(
+      {required this.id,
+      required this.title,
+      this.titleEs,
+      required this.description,
+      this.descriptionEs,
+      this.price,
+      this.duration,
+      this.level,
+      this.imageUrl,
+      this.category});
 
   factory Course.fromJson(Map<String, dynamic> j) => Course(
-    id: j['id'] ?? 0,
-    title: j['title'] ?? '',
-    titleEs: j['title_es'],
-    description: j['description'] ?? '',
-    descriptionEs: j['description_es'],
-    price: j['price'] != null ? (j['price']).toDouble() : null,
-    duration: j['duration_weeks'] != null ? '${j['duration_weeks']} semanas' : j['schedule'],
-    level: j['mode'],
-    imageUrl: j['image_url'],
-    category: j['mode'],
-  );
+        id: j['id'] ?? 0,
+        title: j['title'] ?? '',
+        titleEs: j['title_es'],
+        description: j['description'] ?? '',
+        descriptionEs: j['description_es'],
+        price: j['price'] != null ? (j['price']).toDouble() : null,
+        duration: j['duration_weeks'] != null
+            ? '${j['duration_weeks']} semanas'
+            : j['schedule'],
+        level: j['mode'],
+        imageUrl: j['image_url'],
+        category: j['mode'],
+      );
 }
 
 // ── CartItem ─────────────────────────────────────────────────────
 class CartItem {
   final Part part;
   int qty;
-
   CartItem({required this.part, this.qty = 1});
-
   double get subtotal => part.price * qty;
+}
+
+// ── OrderRequest ─────────────────────────────────────────────────
+class OrderRequest {
+  final String customerName;
+  final String customerEmail;
+  final String customerPhone;
+  final String shippingAddress;
+  final String paymentMethod; // card | zelle | bank_transfer
+  final List<OrderItem> items;
+
+  const OrderRequest({
+    required this.customerName,
+    required this.customerEmail,
+    required this.customerPhone,
+    required this.shippingAddress,
+    required this.paymentMethod,
+    required this.items,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'customer_name': customerName,
+        'customer_email': customerEmail,
+        'customer_phone': customerPhone,
+        'shipping_address': shippingAddress,
+        'payment_method': paymentMethod,
+        'items': items.map((i) => i.toJson()).toList(),
+      };
+}
+
+class OrderItem {
+  final int partId;
+  final int quantity;
+  const OrderItem({required this.partId, required this.quantity});
+  Map<String, dynamic> toJson() => {'part_id': partId, 'quantity': quantity};
 }
 
 // ── QuoteRequest ─────────────────────────────────────────────────
 class QuoteRequest {
-  final String name;
-  final String email;
-  final String phone;
-  final String message;
+  final String name, email, phone, message;
   final String? partName;
-
-  const QuoteRequest({
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.message,
-    this.partName,
-  });
-
+  const QuoteRequest(
+      {required this.name,
+      required this.email,
+      required this.phone,
+      required this.message,
+      this.partName});
   Map<String, dynamic> toJson() => {
-    'name': name,
-    'email': email,
-    'phone': phone,
-    'message': message,
-    if (partName != null) 'part_name': partName,
-  };
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'message': message,
+        if (partName != null) 'part_name': partName,
+      };
 }

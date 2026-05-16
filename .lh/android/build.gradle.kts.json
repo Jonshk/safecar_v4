@@ -1,0 +1,22 @@
+{
+    "sourceFile": "android/build.gradle.kts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1778925902000,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1778926829337,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,25 +1,24 @@\n-android {\r\n-    namespace \"com.safecar.safecar_app\"\r\n-    compileSdkVersion 34\r\n-\r\n-    defaultConfig {\r\n-        applicationId \"com.safecar.safecar_app\"\r\n-        minSdkVersion 21\r\n-        targetSdkVersion 34\r\n-        versionCode 2\r\n-        versionName \"2.0.0\"\r\n+allprojects {\r\n+    repositories {\r\n+        google()\r\n+        mavenCentral()\r\n     }\r\n+}\r\n \r\n-    buildTypes {\r\n-        release {\r\n-            signingConfig signingConfigs.debug\r\n-            minifyEnabled true\r\n-            shrinkResources true\r\n-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n-        }\r\n-    }\r\n\\ No newline at end of file\n+val newBuildDir: Directory =\r\n+    rootProject.layout.buildDirectory\r\n+        .dir(\"../../build\")\r\n+        .get()\r\n+rootProject.layout.buildDirectory.value(newBuildDir)\r\n+\r\n+subprojects {\r\n+    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)\r\n+    project.layout.buildDirectory.value(newSubprojectBuildDir)\r\n }\r\n+subprojects {\r\n+    project.evaluationDependsOn(\":app\")\r\n+}\r\n \r\n-flutter {\r\n-    source '../..'\r\n-}\n+tasks.register<Delete>(\"clean\") {\r\n+    delete(rootProject.layout.buildDirectory)\r\n+}\r\n"
+                }
+            ],
+            "date": 1778925902000,
+            "name": "Commit-0",
+            "content": "android {\r\n    namespace \"com.safecar.safecar_app\"\r\n    compileSdkVersion 34\r\n\r\n    defaultConfig {\r\n        applicationId \"com.safecar.safecar_app\"\r\n        minSdkVersion 21\r\n        targetSdkVersion 34\r\n        versionCode 2\r\n        versionName \"2.0.0\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            signingConfig signingConfigs.debug\r\n            minifyEnabled true\r\n            shrinkResources true\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n}\r\n\r\nflutter {\r\n    source '../..'\r\n}"
+        }
+    ]
+}

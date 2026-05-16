@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'theme/app_theme.dart';
 import 'services/cart_provider.dart';
 import 'services/lang_provider.dart';
@@ -16,6 +17,10 @@ import 'models/models.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  // Stripe solo funciona en Android/iOS, no en web
+  try {
+    Stripe.publishableKey = AppTheme.stripeKey;
+  } catch (_) {}
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
@@ -104,34 +109,39 @@ class _MainShellState extends State<MainShell> {
     return Scaffold(
       backgroundColor: AppTheme.bg,
       // Toggle idioma arriba derecha
-      appBar: _idx == 0 ? AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        actions: [
-          GestureDetector(
-            onTap: () => context.read<LangProvider>().toggle(),
-            child: Container(
-              margin: const EdgeInsets.only(right: 14, top: 8, bottom: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppTheme.bgCard,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppTheme.border),
-              ),
-              child: Text(
-                lang.isEs ? '🇺🇸 EN' : '🇲🇽 ES',
-                style: AppTheme.mono(11, w: FontWeight.w700),
-              ),
-            ),
-          ),
-        ],
-      ) : null,
+      appBar: _idx == 0
+          ? AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              actions: [
+                GestureDetector(
+                  onTap: () => context.read<LangProvider>().toggle(),
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 14, top: 8, bottom: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppTheme.bgCard,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppTheme.border),
+                    ),
+                    child: Text(
+                      lang.isEs ? '🇺🇸 EN' : '🇲🇽 ES',
+                      style: AppTheme.mono(11, w: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : null,
       // Carrito flotante animado
-      floatingActionButton: _idx != 3 ? _CartFAB(
-        count: cart.count,
-        onTap: () => _navigate(3),
-      ) : null,
+      floatingActionButton: _idx != 3
+          ? _CartFAB(
+              count: cart.count,
+              onTap: () => _navigate(3),
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: IndexedStack(index: _idx, children: screens),
       bottomNavigationBar: Container(
@@ -145,11 +155,39 @@ class _MainShellState extends State<MainShell> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _NavItem(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: s.navHome, index: 0, current: _idx, onTap: _navigate),
-                _NavItem(icon: Icons.storefront_outlined, activeIcon: Icons.storefront_rounded, label: s.navShop, index: 1, current: _idx, onTap: _navigate),
-                _NavItem(icon: Icons.school_outlined, activeIcon: Icons.school_rounded, label: s.navTraining, index: 2, current: _idx, onTap: _navigate),
-                _CartNavItem(current: _idx, onTap: _navigate, count: cart.count, label: s.navCart),
-                _NavItem(icon: Icons.phone_outlined, activeIcon: Icons.phone_rounded, label: s.navContact, index: 4, current: _idx, onTap: _navigate),
+                _NavItem(
+                    icon: Icons.home_outlined,
+                    activeIcon: Icons.home_rounded,
+                    label: s.navHome,
+                    index: 0,
+                    current: _idx,
+                    onTap: _navigate),
+                _NavItem(
+                    icon: Icons.storefront_outlined,
+                    activeIcon: Icons.storefront_rounded,
+                    label: s.navShop,
+                    index: 1,
+                    current: _idx,
+                    onTap: _navigate),
+                _NavItem(
+                    icon: Icons.school_outlined,
+                    activeIcon: Icons.school_rounded,
+                    label: s.navTraining,
+                    index: 2,
+                    current: _idx,
+                    onTap: _navigate),
+                _CartNavItem(
+                    current: _idx,
+                    onTap: _navigate,
+                    count: cart.count,
+                    label: s.navCart),
+                _NavItem(
+                    icon: Icons.phone_outlined,
+                    activeIcon: Icons.phone_rounded,
+                    label: s.navContact,
+                    index: 4,
+                    current: _idx,
+                    onTap: _navigate),
               ],
             ),
           ),
@@ -164,7 +202,13 @@ class _NavItem extends StatelessWidget {
   final String label;
   final int index, current;
   final Function(int) onTap;
-  const _NavItem({required this.icon, required this.activeIcon, required this.label, required this.index, required this.current, required this.onTap});
+  const _NavItem(
+      {required this.icon,
+      required this.activeIcon,
+      required this.label,
+      required this.index,
+      required this.current,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -181,9 +225,13 @@ class _NavItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Icon(active ? activeIcon : icon, color: active ? AppTheme.red : AppTheme.white30, size: 22),
+          Icon(active ? activeIcon : icon,
+              color: active ? AppTheme.red : AppTheme.white30, size: 22),
           const SizedBox(height: 3),
-          Text(label, style: AppTheme.mono(9, w: FontWeight.w600, color: active ? AppTheme.red : AppTheme.white30)),
+          Text(label,
+              style: AppTheme.mono(9,
+                  w: FontWeight.w600,
+                  color: active ? AppTheme.red : AppTheme.white30)),
         ]),
       ),
     );
@@ -194,7 +242,11 @@ class _CartNavItem extends StatelessWidget {
   final int current, count;
   final Function(int) onTap;
   final String label;
-  const _CartNavItem({required this.current, required this.onTap, required this.count, required this.label});
+  const _CartNavItem(
+      {required this.current,
+      required this.onTap,
+      required this.count,
+      required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -211,18 +263,33 @@ class _CartNavItem extends StatelessWidget {
         ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Stack(clipBehavior: Clip.none, children: [
-            Icon(active ? Icons.shopping_bag_rounded : Icons.shopping_bag_outlined,
-              color: active ? AppTheme.red : AppTheme.white30, size: 22),
+            Icon(
+                active
+                    ? Icons.shopping_bag_rounded
+                    : Icons.shopping_bag_outlined,
+                color: active ? AppTheme.red : AppTheme.white30,
+                size: 22),
             if (count > 0)
-              Positioned(top: -4, right: -4,
-                child: Container(
-                  width: 14, height: 14,
-                  decoration: const BoxDecoration(color: AppTheme.red, shape: BoxShape.circle),
-                  child: Center(child: Text('$count', style: AppTheme.mono(8, w: FontWeight.w800))),
-                ).animate().scale(duration: 200.ms, curve: Curves.elasticOut)),
+              Positioned(
+                  top: -4,
+                  right: -4,
+                  child: Container(
+                    width: 14,
+                    height: 14,
+                    decoration: const BoxDecoration(
+                        color: AppTheme.red, shape: BoxShape.circle),
+                    child: Center(
+                        child: Text('$count',
+                            style: AppTheme.mono(8, w: FontWeight.w800))),
+                  )
+                      .animate()
+                      .scale(duration: 200.ms, curve: Curves.elasticOut)),
           ]),
           const SizedBox(height: 3),
-          Text(label, style: AppTheme.mono(9, w: FontWeight.w600, color: active ? AppTheme.red : AppTheme.white30)),
+          Text(label,
+              style: AppTheme.mono(9,
+                  w: FontWeight.w600,
+                  color: active ? AppTheme.red : AppTheme.white30)),
         ]),
       ),
     );
@@ -238,7 +305,8 @@ class _CartFAB extends StatefulWidget {
   State<_CartFAB> createState() => _CartFABState();
 }
 
-class _CartFABState extends State<_CartFAB> with SingleTickerProviderStateMixin {
+class _CartFABState extends State<_CartFAB>
+    with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
   late Animation<double> _scale;
   int _prevCount = 0;
@@ -246,10 +314,17 @@ class _CartFABState extends State<_CartFAB> with SingleTickerProviderStateMixin 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 350));
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 350));
     _scale = TweenSequence([
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.28).chain(CurveTween(curve: Curves.easeOut)), weight: 40),
-      TweenSequenceItem(tween: Tween(begin: 1.28, end: 1.0).chain(CurveTween(curve: Curves.elasticOut)), weight: 60),
+      TweenSequenceItem(
+          tween: Tween(begin: 1.0, end: 1.28)
+              .chain(CurveTween(curve: Curves.easeOut)),
+          weight: 40),
+      TweenSequenceItem(
+          tween: Tween(begin: 1.28, end: 1.0)
+              .chain(CurveTween(curve: Curves.elasticOut)),
+          weight: 60),
     ]).animate(_ctrl);
   }
 
@@ -263,7 +338,10 @@ class _CartFABState extends State<_CartFAB> with SingleTickerProviderStateMixin 
   }
 
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -274,30 +352,38 @@ class _CartFABState extends State<_CartFAB> with SingleTickerProviderStateMixin 
         child: GestureDetector(
           onTap: widget.onTap,
           child: Container(
-            width: 62, height: 62,
+            width: 62,
+            height: 62,
             decoration: BoxDecoration(
               color: AppTheme.red,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
                   color: AppTheme.red.withOpacity(0.45),
-                  blurRadius: 20, offset: const Offset(0, 6),
+                  blurRadius: 20,
+                  offset: const Offset(0, 6),
                 ),
               ],
             ),
             child: Stack(alignment: Alignment.center, children: [
-              const Icon(Icons.shopping_bag_rounded, color: Colors.white, size: 28),
+              const Icon(Icons.shopping_bag_rounded,
+                  color: Colors.white, size: 28),
               if (widget.count > 0)
                 Positioned(
-                  top: 8, right: 8,
+                  top: 8,
+                  right: 8,
                   child: Container(
-                    width: 18, height: 18,
-                    decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                    width: 18,
+                    height: 18,
+                    decoration: const BoxDecoration(
+                        color: Colors.white, shape: BoxShape.circle),
                     child: Center(
                       child: Text(
                         widget.count > 9 ? '9+' : '${widget.count}',
                         style: const TextStyle(
-                          color: AppTheme.red, fontSize: 9, fontWeight: FontWeight.w900,
+                          color: AppTheme.red,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w900,
                         ),
                       ),
                     ),
