@@ -16,7 +16,8 @@ const _catKeys = [
   'Cooling',
   'Glass',
   'Body',
-  'Other'
+  'Fluids',
+  'Other',
 ];
 
 const _catDisplay = {
@@ -29,6 +30,7 @@ const _catDisplay = {
     'Cooling': 'Cooling',
     'Glass': 'Glass',
     'Body': 'Body',
+    'Fluids': 'Fluids',
     'Other': 'Other',
   },
   'es': {
@@ -40,12 +42,16 @@ const _catDisplay = {
     'Cooling': 'Refrigeración',
     'Glass': 'Vidrios',
     'Body': 'Carrocería',
+    'Fluids': 'Fluidos',
     'Other': 'Otros',
   },
 };
 
 class ShopScreen extends StatefulWidget {
-  const ShopScreen({super.key});
+  // FIX: recibe categoría inicial desde home (en inglés, ej: 'Fluids')
+  final String? initialCategory;
+  const ShopScreen({super.key, this.initialCategory});
+
   @override
   State<ShopScreen> createState() => _ShopScreenState();
 }
@@ -64,9 +70,21 @@ class _ShopScreenState extends State<ShopScreen> {
   @override
   void initState() {
     super.initState();
+    // FIX: aplicar categoría inicial si viene del home
+    _selectedCat = widget.initialCategory;
     _loadCategories();
     _load();
     _scroll.addListener(_onScroll);
+  }
+
+  @override
+  void didUpdateWidget(ShopScreen old) {
+    super.didUpdateWidget(old);
+    // FIX: si cambia la categoría inicial (re-tap desde home), aplicarla
+    if (widget.initialCategory != old.initialCategory) {
+      _selectedCat = widget.initialCategory;
+      _load(reset: true);
+    }
   }
 
   @override
@@ -86,7 +104,6 @@ class _ShopScreenState extends State<ShopScreen> {
   Future<void> _loadCategories() async {
     final cats = await ApiService.getCategories();
     if (!mounted) return;
-    // Solo mostrar categorías que existen en la DB y están en nuestra lista
     setState(() {
       _availableCats = _catKeys.where((k) => cats.contains(k)).toList();
       if (_availableCats.isEmpty) _availableCats = cats;
@@ -94,16 +111,18 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   Future<void> _load({bool reset = false}) async {
-    if (reset)
+    if (reset) {
       setState(() {
         _parts = [];
         _skip = 0;
         _loading = true;
       });
+    }
     final data = await ApiService.getParts(
-      category: _selectedCat, // inglés directo al backend
+      category: _selectedCat,
       search: _search.text.trim().isEmpty ? null : _search.text.trim(),
-      skip: 0, limit: _limit,
+      skip: 0,
+      limit: _limit,
     );
     if (!mounted) return;
     setState(() {

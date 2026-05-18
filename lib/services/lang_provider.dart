@@ -13,7 +13,8 @@ class AppStrings {
   String get appName => 'Safe Car Automotive';
   String get chicago => 'CHICAGO, IL · EST. 2012';
   String get seeAll => isEs ? 'VER TODO →' : 'SEE ALL →';
-  String get pullRefresh => isEs ? 'Desliza para actualizar' : 'Pull to refresh';
+  String get pullRefresh =>
+      isEs ? 'Desliza para actualizar' : 'Pull to refresh';
   String get loading => isEs ? 'Cargando...' : 'Loading...';
   String get noResults => isEs ? 'Sin resultados' : 'No results';
   String get retry => isEs ? 'Reintentar' : 'Retry';
@@ -41,38 +42,48 @@ class AppStrings {
       ? 'La fuente premier de Chicago para\nrefacciones y capacitación profesional.'
       : "Chicago's premier source for\nauto parts & professional training.";
   String get homeShopParts => isEs ? 'VER REFACCIONES' : 'SHOP PARTS';
-  String get homeCategories => 'CATEGORIES';
+  // FIX: era 'CATEGORIES' hardcodeado, ahora respeta el idioma
+  String get homeCategories => isEs ? 'CATEGORÍAS' : 'CATEGORIES';
   String get homeFeatured => isEs ? 'DESTACADOS' : 'FEATURED PARTS';
   String get homeStats1 => isEs ? 'Refacciones\nEn Stock' : 'Parts\nIn Stock';
   String get homeStats2 => isEs ? 'Años de\nExperiencia' : 'Years\nExperience';
-  String get homeStats3 => isEs ? 'Satisfacción\nde Clientes' : 'Customer\nSatisfaction';
-  String get homeBannerTitle => isEs ? '¿NECESITAS UNA PARTE ESPECIAL?' : 'NEED A CUSTOM PART?';
-  String get homeBannerSub => isEs ? 'Obtén una cotización gratis →' : 'Get a free quote in minutes →';
-  String get homeNoPartsTitle => isEs ? 'Sin refacciones cargadas' : 'No parts loaded yet';
-  String get homeNoPartsSub => isEs ? 'Desliza para actualizar' : 'Pull to refresh';
+  String get homeStats3 =>
+      isEs ? 'Satisfacción\nde Clientes' : 'Customer\nSatisfaction';
+  String get homeBannerTitle =>
+      isEs ? '¿NECESITAS UNA PARTE ESPECIAL?' : 'NEED A CUSTOM PART?';
+  String get homeBannerSub =>
+      isEs ? 'Obtén una cotización gratis →' : 'Get a free quote in minutes →';
+  String get homeNoPartsTitle =>
+      isEs ? 'Sin refacciones cargadas' : 'No parts loaded yet';
+  String get homeNoPartsSub =>
+      isEs ? 'Desliza para actualizar' : 'Pull to refresh';
   String get homeLive => isEs ? 'EN VIVO · CHICAGO, IL' : 'LIVE · CHICAGO, IL';
 
   // ── Categories ───────────────────────────────────────────────
   String get catEngine => isEs ? 'Motor' : 'Engine';
   String get catBody => isEs ? 'Carrocería' : 'Body';
   String get catElectrical => isEs ? 'Eléctrico' : 'Electrical';
-  String get catSuspension => 'Suspensión';
+  String get catSuspension => isEs ? 'Suspensión' : 'Suspension';
   String get catFluids => isEs ? 'Fluidos' : 'Fluids';
 
   // ── Shop ─────────────────────────────────────────────────────
   String get shopTitle => isEs ? 'TIENDA' : 'PARTS SHOP';
   String get shopSubtitle => isEs ? 'Refacciones' : 'Auto Parts';
-  String get shopSearch => isEs ? 'Buscar refacciones, SKU...' : 'Search parts, SKU...';
+  String get shopSearch =>
+      isEs ? 'Buscar refacciones, SKU...' : 'Search parts, SKU...';
   String get shopAll => isEs ? 'Todas' : 'All';
   String get shopNoPartsTitle => isEs ? 'Sin refacciones' : 'No parts found';
-  String get shopNoPartsSub => isEs ? 'Intenta otra búsqueda o categoría' : 'Try a different search or category';
+  String get shopNoPartsSub => isEs
+      ? 'Intenta otra búsqueda o categoría'
+      : 'Try a different search or category';
   String get shopInStock => isEs ? 'EN STOCK' : 'IN STOCK';
   String get shopOutStock => isEs ? 'AGOTADO' : 'OUT OF STOCK';
   String get shopEach => isEs ? 'c/u' : 'each';
 
   // ── Part Detail ──────────────────────────────────────────────
   String get detailDescription => isEs ? 'DESCRIPCIÓN' : 'DESCRIPTION';
-  String get detailUnitsAvailable => isEs ? 'unidades disponibles' : 'units available';
+  String get detailUnitsAvailable =>
+      isEs ? 'unidades disponibles' : 'units available';
   String get detailAddCart => isEs ? 'AGREGAR AL CARRITO' : 'ADD TO CART';
   String get detailAdded => isEs ? 'AGREGADO ✓' : 'ADDED TO CART ✓';
   String get detailAddedSnack => isEs ? 'agregado al carrito' : 'added to cart';
@@ -80,12 +91,14 @@ class AppStrings {
   // ── Training ─────────────────────────────────────────────────
   String get trainingTag => isEs ? 'CENTRO DE CAPACITACIÓN' : 'TRAINING CENTER';
   String get trainingTitle => isEs ? 'Cursos' : 'Courses';
-  String get trainingBannerTitle => isEs ? 'CERTIFICACIÓN\nPROFESIONAL' : 'PROFESSIONAL\nCERTIFICATION';
+  String get trainingBannerTitle =>
+      isEs ? 'CERTIFICACIÓN\nPROFESIONAL' : 'PROFESSIONAL\nCERTIFICATION';
   String get trainingBannerSub => isEs
       ? 'Programas de capacitación automotriz\nreconocidos por la industria.'
       : 'Industry-recognized automotive\ntraining programs.';
   String get trainingAllCourses => isEs ? 'TODOS LOS CURSOS' : 'ALL COURSES';
-  String get trainingNoneTitle => isEs ? 'Sin cursos disponibles' : 'No courses available';
+  String get trainingNoneTitle =>
+      isEs ? 'Sin cursos disponibles' : 'No courses available';
   String get trainingNoneSub => isEs ? '¡Vuelve pronto!' : 'Check back soon!';
 
   // ── Cart ─────────────────────────────────────────────────────
@@ -94,32 +107,41 @@ class AppStrings {
   String get cartItem => isEs ? 'artículo' : 'item';
   String get cartClearAll => isEs ? 'Vaciar todo' : 'Clear all';
   String get cartClearTitle => isEs ? '¿Vaciar carrito?' : 'Clear cart?';
-  String get cartClearSub => isEs ? 'Esto eliminará todos los artículos.' : 'This will remove all items.';
+  String get cartClearSub => isEs
+      ? 'Esto eliminará todos los artículos.'
+      : 'This will remove all items.';
   String get cartSubtotal => isEs ? 'Subtotal' : 'Subtotal';
   String get cartShipping => isEs ? 'Envío' : 'Shipping';
   String get cartShippingTbd => 'TBD';
   String get cartTotal => 'TOTAL';
-  String get cartRequestQuote => isEs ? 'SOLICITAR COTIZACIÓN' : 'REQUEST QUOTE';
+  String get cartCheckout => isEs ? 'PROCEDER AL PAGO' : 'PROCEED TO CHECKOUT';
   String get cartEmpty => isEs ? 'Tu carrito está vacío' : 'Your cart is empty';
-  String get cartEmptySub => isEs ? 'Agrega refacciones para comenzar' : 'Add parts to get started';
-  String get cartSwipeDelete => isEs ? 'Desliza para eliminar' : 'Swipe to delete';
+  String get cartEmptySub =>
+      isEs ? 'Agrega refacciones para comenzar' : 'Add parts to get started';
+  String get cartSwipeDelete =>
+      isEs ? 'Desliza para eliminar' : 'Swipe to delete';
 
   // ── Checkout ─────────────────────────────────────────────────
-  String get checkoutTitle => isEs ? 'SOLICITAR COTIZACIÓN' : 'REQUEST QUOTE';
+  String get checkoutTitle => isEs ? 'FINALIZAR PEDIDO' : 'CHECKOUT';
   String get checkoutName => isEs ? 'Nombre completo' : 'Full Name';
   String get checkoutEmail => 'Email';
   String get checkoutPhone => isEs ? 'Teléfono' : 'Phone';
-  String get checkoutMessage => isEs ? 'Mensaje (opcional)' : 'Message (optional)';
-  String get checkoutSend => isEs ? 'ENVIAR COTIZACIÓN' : 'SEND QUOTE';
-  String get checkoutSuccessTitle => isEs ? '¡Cotización Enviada!' : 'Quote Sent!';
-  String get checkoutSuccessSub => isEs ? 'Te responderemos pronto.' : "We'll get back to you shortly.";
+  String get checkoutMessage =>
+      isEs ? 'Mensaje (opcional)' : 'Message (optional)';
+  String get checkoutSend => isEs ? 'CONFIRMAR PEDIDO' : 'PLACE ORDER';
+  String get checkoutSuccessTitle =>
+      isEs ? '¡Pedido Enviado!' : 'Order Placed!';
+  String get checkoutSuccessSub =>
+      isEs ? 'Te responderemos pronto.' : "We'll get back to you shortly.";
 
   // ── Contact ──────────────────────────────────────────────────
   String get contactTag => isEs ? 'CONTACTO' : 'CONTACT';
   String get contactTitle => isEs ? 'Contáctanos' : 'Get In Touch';
   String get contactPhone => isEs ? 'TELÉFONO' : 'PHONE';
-  String get contactPhoneSub => isEs ? 'Lun-Sáb 8am-6pm' : 'Call us Mon-Sat 8am-6pm';
-  String get contactEmailSub => isEs ? 'Respondemos en 24 horas' : 'We reply within 24 hours';
+  String get contactPhoneSub =>
+      isEs ? 'Lun-Sáb 8am-6pm' : 'Call us Mon-Sat 8am-6pm';
+  String get contactEmailSub =>
+      isEs ? 'Respondemos en 24 horas' : 'We reply within 24 hours';
   String get contactAddress => isEs ? 'DIRECCIÓN' : 'ADDRESS';
   String get contactAddressSub => 'Chicago, IL 60601';
   String get contactHours => isEs ? 'HORARIO' : 'BUSINESS HOURS';

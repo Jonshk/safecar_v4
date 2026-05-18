@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1778954279676,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1779135214048,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,10 @@\n   'Filters',\n   'Cooling',\n   'Glass',\n   'Body',\n-  'Other'\n+  'Fluids',\n+  'Other',\n ];\n \n const _catDisplay = {\n   'en': {\n@@ -28,8 +29,9 @@\n     'Filters': 'Filters',\n     'Cooling': 'Cooling',\n     'Glass': 'Glass',\n     'Body': 'Body',\n+    'Fluids': 'Fluids',\n     'Other': 'Other',\n   },\n   'es': {\n     'Brakes': 'Frenos',\n@@ -39,14 +41,18 @@\n     'Filters': 'Filtros',\n     'Cooling': 'Refrigeración',\n     'Glass': 'Vidrios',\n     'Body': 'Carrocería',\n+    'Fluids': 'Fluidos',\n     'Other': 'Otros',\n   },\n };\n \n class ShopScreen extends StatefulWidget {\n-  const ShopScreen({super.key});\n+  // FIX: recibe categoría inicial desde home (en inglés, ej: 'Fluids')\n+  final String? initialCategory;\n+  const ShopScreen({super.key, this.initialCategory});\n+\n   @override\n   State<ShopScreen> createState() => _ShopScreenState();\n }\n \n@@ -63,14 +69,26 @@\n \n   @override\n   void initState() {\n     super.initState();\n+    // FIX: aplicar categoría inicial si viene del home\n+    _selectedCat = widget.initialCategory;\n     _loadCategories();\n     _load();\n     _scroll.addListener(_onScroll);\n   }\n \n   @override\n+  void didUpdateWidget(ShopScreen old) {\n+    super.didUpdateWidget(old);\n+    // FIX: si cambia la categoría inicial (re-tap desde home), aplicarla\n+    if (widget.initialCategory != old.initialCategory) {\n+      _selectedCat = widget.initialCategory;\n+      _load(reset: true);\n+    }\n+  }\n+\n+  @override\n   void dispose() {\n     _search.dispose();\n     _scroll.dispose();\n     super.dispose();\n@@ -85,26 +103,27 @@\n \n   Future<void> _loadCategories() async {\n     final cats = await ApiService.getCategories();\n     if (!mounted) return;\n-    // Solo mostrar categorías que existen en la DB y están en nuestra lista\n     setState(() {\n       _availableCats = _catKeys.where((k) => cats.contains(k)).toList();\n       if (_availableCats.isEmpty) _availableCats = cats;\n     });\n   }\n \n   Future<void> _load({bool reset = false}) async {\n-    if (reset)\n+    if (reset) {\n       setState(() {\n         _parts = [];\n         _skip = 0;\n         _loading = true;\n       });\n+    }\n     final data = await ApiService.getParts(\n-      category: _selectedCat, // inglés directo al backend\n+      category: _selectedCat,\n       search: _search.text.trim().isEmpty ? null : _search.text.trim(),\n-      skip: 0, limit: _limit,\n+      skip: 0,\n+      limit: _limit,\n     );\n     if (!mounted) return;\n     setState(() {\n       _parts = data;\n"
                 }
             ],
             "date": 1778954279676,

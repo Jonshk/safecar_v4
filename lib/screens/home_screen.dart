@@ -8,7 +8,7 @@ import '../services/lang_provider.dart';
 import '../widgets/shared.dart';
 
 class HomeScreen extends StatefulWidget {
-  final Function(int) onNavigate;
+  final Function(int, {String? category}) onNavigate;
   const HomeScreen({super.key, required this.onNavigate});
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -93,7 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Status + lang toggle row
                     Row(children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -235,13 +234,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _categories(s) {
+    // FIX: cada categoría tiene su key en inglés (para el backend) + label traducido
     final cats = [
-      (Icons.settings_outlined, s.catEngine),
-      (Icons.directions_car_outlined, s.catBody),
-      (Icons.electric_bolt_outlined, s.catElectrical),
-      (Icons.tire_repair_outlined, s.catSuspension),
-      (Icons.opacity_outlined, s.catFluids),
+      ('Engine', Icons.settings_outlined, s.catEngine),
+      ('Body', Icons.directions_car_outlined, s.catBody),
+      ('Electrical', Icons.electric_bolt_outlined, s.catElectrical),
+      ('Suspension', Icons.tire_repair_outlined, s.catSuspension),
+      ('Fluids', Icons.opacity_outlined, s.catFluids),
     ];
+
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
           padding: const EdgeInsets.fromLTRB(16, 28, 16, 14),
@@ -255,7 +256,8 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (_, i) {
               final c = cats[i];
               return GestureDetector(
-                onTap: () => widget.onNavigate(1),
+                // FIX: navega a tab 1 pasando la categoría en inglés
+                onTap: () => widget.onNavigate(1, category: c.$1),
                 child: Container(
                   width: 80,
                   margin: const EdgeInsets.only(right: 10),
@@ -266,9 +268,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(c.$1, color: AppTheme.red, size: 24),
+                        Icon(c.$2, color: AppTheme.red, size: 24),
                         const SizedBox(height: 6),
-                        Text(c.$2,
+                        Text(c.$3,
                             style: AppTheme.mono(10,
                                 w: FontWeight.w600, color: AppTheme.white80)),
                       ]),

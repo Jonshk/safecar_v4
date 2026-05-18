@@ -17,7 +17,6 @@ import 'models/models.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // Stripe solo funciona en Android/iOS, no en web
   try {
     Stripe.publishableKey = AppTheme.stripeKey;
   } catch (_) {}
@@ -90,7 +89,16 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _idx = 0;
-  void _navigate(int i) => setState(() => _idx = i);
+  // FIX: guarda la categoría seleccionada desde el home
+  String? _shopCategory;
+
+  // FIX: _navigate ahora acepta category opcional
+  void _navigate(int i, {String? category}) {
+    setState(() {
+      _idx = i;
+      if (i == 1) _shopCategory = category; // solo aplica para la tienda
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +107,10 @@ class _MainShellState extends State<MainShell> {
     final s = lang.s;
 
     final screens = [
+      // FIX: HomeScreen recibe la firma actualizada
       HomeScreen(onNavigate: _navigate),
-      const ShopScreen(),
+      // FIX: ShopScreen recibe la categoría inicial
+      ShopScreen(initialCategory: _shopCategory),
       const TrainingScreen(),
       const CartScreen(),
       const ContactScreen(),
@@ -108,7 +118,6 @@ class _MainShellState extends State<MainShell> {
 
     return Scaffold(
       backgroundColor: AppTheme.bg,
-      // Toggle idioma arriba derecha
       appBar: _idx == 0
           ? AppBar(
               backgroundColor: Colors.transparent,
@@ -135,12 +144,8 @@ class _MainShellState extends State<MainShell> {
               ],
             )
           : null,
-      // Carrito flotante animado
       floatingActionButton: _idx != 3
-          ? _CartFAB(
-              count: cart.count,
-              onTap: () => _navigate(3),
-            )
+          ? _CartFAB(count: cart.count, onTap: () => _navigate(3))
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: IndexedStack(index: _idx, children: screens),
@@ -201,7 +206,7 @@ class _NavItem extends StatelessWidget {
   final IconData icon, activeIcon;
   final String label;
   final int index, current;
-  final Function(int) onTap;
+  final void Function(int, {String? category}) onTap;
   const _NavItem(
       {required this.icon,
       required this.activeIcon,
@@ -240,7 +245,7 @@ class _NavItem extends StatelessWidget {
 
 class _CartNavItem extends StatelessWidget {
   final int current, count;
-  final Function(int) onTap;
+  final void Function(int, {String? category}) onTap;
   final String label;
   const _CartNavItem(
       {required this.current,
@@ -296,7 +301,6 @@ class _CartNavItem extends StatelessWidget {
   }
 }
 
-// ── Carrito flotante animado ──────────────────────────────────────
 class _CartFAB extends StatefulWidget {
   final int count;
   final VoidCallback onTap;
