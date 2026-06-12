@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/api_service.dart';
@@ -16,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _fadeCtrl;
   late AnimationController _progressCtrl;
   late AnimationController _pulseCtrl;
+  late AnimationController _pixovaCtrl;
 
   late Animation<double> _fade;
   late Animation<double> _progress;
@@ -48,6 +50,11 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
       duration: const Duration(milliseconds: 1400),
     )..repeat(reverse: true);
+
+    _pixovaCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 3000),
+    )..repeat();
 
     _run();
   }
@@ -82,6 +89,7 @@ class _SplashScreenState extends State<SplashScreen>
     _fadeCtrl.dispose();
     _progressCtrl.dispose();
     _pulseCtrl.dispose();
+    _pixovaCtrl.dispose();
     super.dispose();
   }
 
@@ -97,7 +105,6 @@ class _SplashScreenState extends State<SplashScreen>
         opacity: _fade,
         child: Stack(
           children: [
-            // IMAGEN COMPLETA DEL SPLASH
             Positioned.fill(
               child: Image.asset(
                 'assets/images/splash_safe_car.png',
@@ -106,14 +113,13 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
 
-            // Capa oscura muy suave para integrar el status dinámico
             Positioned.fill(
               child: Container(
                 color: Colors.black.withOpacity(0.03),
               ),
             ),
 
-            // STATUS DINÁMICO ENCIMA
+            // STATUS
             Positioned(
               bottom: 144,
               left: 0,
@@ -122,7 +128,6 @@ class _SplashScreenState extends State<SplashScreen>
                 animation: _pulseCtrl,
                 builder: (_, __) {
                   final glow = 0.35 + (_pulseCtrl.value * 0.45);
-
                   return Column(
                     children: [
                       Text(
@@ -154,7 +159,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
 
-            // BARRA DE PROGRESO ANIMADA
+            // BARRA DE PROGRESO
             Positioned(
               bottom: 100,
               left: 76,
@@ -221,9 +226,109 @@ class _SplashScreenState extends State<SplashScreen>
                 },
               ),
             ),
+
+            // POWERED BY PIXOVA
+            Positioned(
+              bottom: 36,
+              left: 0,
+              right: 0,
+              child: AnimatedBuilder(
+                animation: _pixovaCtrl,
+                builder: (_, __) => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _PixovaGrid(progress: _pixovaCtrl.value),
+                    const SizedBox(width: 7),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'POWERED BY',
+                          style: TextStyle(
+                            fontSize: 7,
+                            letterSpacing: 2,
+                            color: Colors.white.withOpacity(0.3),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 1),
+                        RichText(
+                          text: const TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'pix',
+                                style: TextStyle(
+                                  color: Color(0xFF7C3AED),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.3,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'ova',
+                                style: TextStyle(
+                                  color: Color(0xFF0D9488),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+// ── Pixova Grid animado ──────────────────────────────────────────
+class _PixovaGrid extends StatelessWidget {
+  final double progress;
+  const _PixovaGrid({required this.progress});
+
+  static const _colors = [
+    Color(0xFF7C3AED),
+    Color(0xFF0D9488),
+    Color(0xFF2DD4BF),
+    Color(0xFFA78BFA),
+  ];
+
+  Color _cellColor(int index) {
+    final offset = (progress + index * 0.06) % 1.0;
+    final colorIndex = (offset * _colors.length).floor() % _colors.length;
+    final nextIndex = (colorIndex + 1) % _colors.length;
+    final t = (offset * _colors.length) - colorIndex.toDouble();
+    return Color.lerp(_colors[colorIndex], _colors[nextIndex], t)!;
+  }
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+        width: 34,
+        height: 34,
+        child: GridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            crossAxisSpacing: 2,
+            mainAxisSpacing: 2,
+          ),
+          itemCount: 16,
+          itemBuilder: (_, i) => Container(
+            decoration: BoxDecoration(
+              color: _cellColor(i),
+              borderRadius: BorderRadius.circular(1.5),
+            ),
+          ),
+        ),
+      );
 }

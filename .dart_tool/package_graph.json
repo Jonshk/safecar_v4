@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "safecar_app",
-      "version": "2.0.0+1",
+      "version": "2.0.1+2",
       "dependencies": [
         "badges",
         "cached_network_image",
@@ -266,10 +266,9 @@
     },
     {
       "name": "image",
-      "version": "4.8.0",
+      "version": "4.9.1",
       "dependencies": [
         "archive",
-        "meta",
         "xml"
       ]
     },
@@ -309,7 +308,7 @@
     },
     {
       "name": "meta",
-      "version": "1.17.0",
+      "version": "1.18.0",
       "dependencies": []
     },
     {
@@ -366,7 +365,7 @@
     },
     {
       "name": "test_api",
-      "version": "0.7.10",
+      "version": "0.7.11",
       "dependencies": [
         "async",
         "boolean_selector",
@@ -381,7 +380,7 @@
     },
     {
       "name": "vector_graphics_compiler",
-      "version": "1.2.2",
+      "version": "1.2.5",
       "dependencies": [
         "args",
         "meta",
@@ -398,7 +397,7 @@
     },
     {
       "name": "vector_graphics",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "dependencies": [
         "flutter",
         "http",
@@ -482,9 +481,10 @@
     },
     {
       "name": "url_launcher_android",
-      "version": "6.3.29",
+      "version": "6.3.32",
       "dependencies": [
         "flutter",
+        "meta",
         "url_launcher_platform_interface"
       ]
     },
@@ -616,9 +616,10 @@
     },
     {
       "name": "shared_preferences_android",
-      "version": "2.4.23",
+      "version": "2.4.26",
       "dependencies": [
         "flutter",
+        "meta",
         "shared_preferences_platform_interface"
       ]
     },
@@ -699,7 +700,7 @@
     },
     {
       "name": "xml",
-      "version": "6.6.1",
+      "version": "7.0.1",
       "dependencies": [
         "collection",
         "meta",
@@ -839,7 +840,7 @@
     },
     {
       "name": "sqflite",
-      "version": "2.4.2+1",
+      "version": "2.4.3",
       "dependencies": [
         "flutter",
         "path",
@@ -895,14 +896,14 @@
     },
     {
       "name": "objective_c",
-      "version": "9.3.0",
+      "version": "9.4.1",
       "dependencies": [
         "code_assets",
         "collection",
         "ffi",
         "hooks",
         "logging",
-        "native_toolchain_c",
+        "meta",
         "pub_semver"
       ]
     },
@@ -934,7 +935,7 @@
     },
     {
       "name": "sqflite_common",
-      "version": "2.5.7",
+      "version": "2.5.9",
       "dependencies": [
         "meta",
         "path",
@@ -943,7 +944,7 @@
     },
     {
       "name": "sqflite_platform_interface",
-      "version": "2.4.0",
+      "version": "2.4.1",
       "dependencies": [
         "flutter",
         "meta",
@@ -954,7 +955,7 @@
     },
     {
       "name": "sqflite_darwin",
-      "version": "2.4.2",
+      "version": "2.4.3",
       "dependencies": [
         "flutter",
         "meta",
@@ -965,7 +966,7 @@
     },
     {
       "name": "sqflite_android",
-      "version": "2.4.2+3",
+      "version": "2.4.3",
       "dependencies": [
         "flutter",
         "path",
@@ -981,20 +982,8 @@
       ]
     },
     {
-      "name": "native_toolchain_c",
-      "version": "0.17.6",
-      "dependencies": [
-        "code_assets",
-        "glob",
-        "hooks",
-        "logging",
-        "meta",
-        "pub_semver"
-      ]
-    },
-    {
       "name": "hooks",
-      "version": "1.0.3",
+      "version": "2.0.2",
       "dependencies": [
         "collection",
         "crypto",
@@ -1007,7 +996,7 @@
     },
     {
       "name": "code_assets",
-      "version": "1.0.0",
+      "version": "1.2.1",
       "dependencies": [
         "collection",
         "hooks"
@@ -1022,19 +1011,8 @@
     },
     {
       "name": "synchronized",
-      "version": "3.4.0+1",
+      "version": "3.4.1",
       "dependencies": []
-    },
-    {
-      "name": "glob",
-      "version": "2.1.3",
-      "dependencies": [
-        "async",
-        "collection",
-        "file",
-        "path",
-        "string_scanner"
-      ]
     },
     {
       "name": "record_use",
