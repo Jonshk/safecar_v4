@@ -13,6 +13,8 @@ import 'screens/training_screen.dart';
 import 'screens/cart_screen.dart';
 import 'screens/contact_screen.dart';
 import 'screens/part_detail_screen.dart';
+import 'screens/tow_screen.dart';
+import 'screens/booking_screen.dart';
 import 'models/models.dart';
 
 void main() {
@@ -88,15 +90,14 @@ class MainShell extends StatefulWidget {
 }
 
 class _MainShellState extends State<MainShell> {
+  // 0=Home 1=Shop 2=Training 3=Tow 4=Book 5=Cart 6=Contact
   int _idx = 0;
-  // FIX: guarda la categoría seleccionada desde el home
   String? _shopCategory;
 
-  // FIX: _navigate ahora acepta category opcional
   void _navigate(int i, {String? category}) {
     setState(() {
       _idx = i;
-      if (i == 1) _shopCategory = category; // solo aplica para la tienda
+      if (i == 1) _shopCategory = category;
     });
   }
 
@@ -107,14 +108,18 @@ class _MainShellState extends State<MainShell> {
     final s = lang.s;
 
     final screens = [
-      // FIX: HomeScreen recibe la firma actualizada
-      HomeScreen(onNavigate: _navigate),
-      // FIX: ShopScreen recibe la categoría inicial
-      ShopScreen(initialCategory: _shopCategory),
-      const TrainingScreen(),
-      const CartScreen(),
-      const ContactScreen(),
+      HomeScreen(onNavigate: _navigate), // 0
+      ShopScreen(initialCategory: _shopCategory), // 1
+      const TrainingScreen(), // 2
+      const TowScreen(), // 3
+      const BookingScreen(), // 4
+      const CartScreen(), // 5
+      const ContactScreen(), // 6
     ];
+
+    // nav activo: Home(0) Shop(1) Tow(3) Book(4) Training(2)
+    // mapeamos _idx al índice del nav
+    final navActive = [0, 1, 4, 2, 3, -1, -1][_idx.clamp(0, 6)];
 
     return Scaffold(
       backgroundColor: AppTheme.bg,
@@ -144,8 +149,8 @@ class _MainShellState extends State<MainShell> {
               ],
             )
           : null,
-      floatingActionButton: _idx != 3
-          ? _CartFAB(count: cart.count, onTap: () => _navigate(3))
+      floatingActionButton: _idx != 5
+          ? _CartFAB(count: cart.count, onTap: () => _navigate(5))
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: IndexedStack(index: _idx, children: screens),
@@ -161,38 +166,45 @@ class _MainShellState extends State<MainShell> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _NavItem(
-                    icon: Icons.home_outlined,
-                    activeIcon: Icons.home_rounded,
-                    label: s.navHome,
-                    index: 0,
-                    current: _idx,
-                    onTap: _navigate),
+                  icon: Icons.home_outlined,
+                  activeIcon: Icons.home_rounded,
+                  label: s.navHome,
+                  index: 0,
+                  current: navActive,
+                  onTap: (_) => _navigate(0),
+                ),
                 _NavItem(
-                    icon: Icons.storefront_outlined,
-                    activeIcon: Icons.storefront_rounded,
-                    label: s.navShop,
-                    index: 1,
-                    current: _idx,
-                    onTap: _navigate),
+                  icon: Icons.storefront_outlined,
+                  activeIcon: Icons.storefront_rounded,
+                  label: s.navShop,
+                  index: 1,
+                  current: navActive,
+                  onTap: (_) => _navigate(1),
+                ),
                 _NavItem(
-                    icon: Icons.school_outlined,
-                    activeIcon: Icons.school_rounded,
-                    label: s.navTraining,
-                    index: 2,
-                    current: _idx,
-                    onTap: _navigate),
-                _CartNavItem(
-                    current: _idx,
-                    onTap: _navigate,
-                    count: cart.count,
-                    label: s.navCart),
+                  icon: Icons.local_shipping_outlined,
+                  activeIcon: Icons.local_shipping_rounded,
+                  label: 'Tow',
+                  index: 2,
+                  current: navActive,
+                  onTap: (_) => _navigate(3),
+                ),
                 _NavItem(
-                    icon: Icons.phone_outlined,
-                    activeIcon: Icons.phone_rounded,
-                    label: s.navContact,
-                    index: 4,
-                    current: _idx,
-                    onTap: _navigate),
+                  icon: Icons.build_circle_outlined,
+                  activeIcon: Icons.build_circle_rounded,
+                  label: 'Book',
+                  index: 3,
+                  current: navActive,
+                  onTap: (_) => _navigate(4),
+                ),
+                _NavItem(
+                  icon: Icons.school_outlined,
+                  activeIcon: Icons.school_rounded,
+                  label: s.navTraining,
+                  index: 4,
+                  current: navActive,
+                  onTap: (_) => _navigate(2),
+                ),
               ],
             ),
           ),
@@ -206,14 +218,16 @@ class _NavItem extends StatelessWidget {
   final IconData icon, activeIcon;
   final String label;
   final int index, current;
-  final void Function(int, {String? category}) onTap;
-  const _NavItem(
-      {required this.icon,
-      required this.activeIcon,
-      required this.label,
-      required this.index,
-      required this.current,
-      required this.onTap});
+  final void Function(int) onTap;
+
+  const _NavItem({
+    required this.icon,
+    required this.activeIcon,
+    required this.label,
+    required this.index,
+    required this.current,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -224,7 +238,7 @@ class _NavItem extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOutCubic,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: active ? AppTheme.redGlow : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
@@ -247,11 +261,12 @@ class _CartNavItem extends StatelessWidget {
   final int current, count;
   final void Function(int, {String? category}) onTap;
   final String label;
-  const _CartNavItem(
-      {required this.current,
-      required this.onTap,
-      required this.count,
-      required this.label});
+  const _CartNavItem({
+    required this.current,
+    required this.onTap,
+    required this.count,
+    required this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -335,9 +350,7 @@ class _CartFABState extends State<_CartFAB>
   @override
   void didUpdateWidget(_CartFAB old) {
     super.didUpdateWidget(old);
-    if (widget.count != _prevCount && widget.count > 0) {
-      _ctrl.forward(from: 0);
-    }
+    if (widget.count != _prevCount && widget.count > 0) _ctrl.forward(from: 0);
     _prevCount = widget.count;
   }
 
@@ -363,10 +376,9 @@ class _CartFABState extends State<_CartFAB>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.red.withOpacity(0.45),
-                  blurRadius: 20,
-                  offset: const Offset(0, 6),
-                ),
+                    color: AppTheme.red.withOpacity(0.45),
+                    blurRadius: 20,
+                    offset: const Offset(0, 6))
               ],
             ),
             child: Stack(alignment: Alignment.center, children: [
@@ -382,15 +394,13 @@ class _CartFABState extends State<_CartFAB>
                     decoration: const BoxDecoration(
                         color: Colors.white, shape: BoxShape.circle),
                     child: Center(
-                      child: Text(
-                        widget.count > 9 ? '9+' : '${widget.count}',
-                        style: const TextStyle(
+                        child: Text(
+                      widget.count > 9 ? '9+' : '${widget.count}',
+                      style: const TextStyle(
                           color: AppTheme.red,
                           fontSize: 9,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
+                          fontWeight: FontWeight.w900),
+                    )),
                   ),
                 ),
             ]),

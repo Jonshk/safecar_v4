@@ -15,6 +15,7 @@
         "flutter_animate",
         "flutter_stripe",
         "flutter_svg",
+        "geolocator",
         "go_router",
         "google_fonts",
         "http",
@@ -68,6 +69,18 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "geolocator",
+      "version": "13.0.4",
+      "dependencies": [
+        "flutter",
+        "geolocator_android",
+        "geolocator_apple",
+        "geolocator_platform_interface",
+        "geolocator_web",
+        "geolocator_windows"
       ]
     },
     {
@@ -308,7 +321,7 @@
     },
     {
       "name": "meta",
-      "version": "1.18.0",
+      "version": "1.17.0",
       "dependencies": []
     },
     {
@@ -365,7 +378,7 @@
     },
     {
       "name": "test_api",
-      "version": "0.7.11",
+      "version": "0.7.10",
       "dependencies": [
         "async",
         "boolean_selector",
@@ -376,6 +389,52 @@
         "stream_channel",
         "string_scanner",
         "term_glyph"
+      ]
+    },
+    {
+      "name": "geolocator_windows",
+      "version": "0.2.5",
+      "dependencies": [
+        "flutter",
+        "geolocator_platform_interface"
+      ]
+    },
+    {
+      "name": "geolocator_web",
+      "version": "4.1.4",
+      "dependencies": [
+        "flutter",
+        "flutter_web_plugins",
+        "geolocator_platform_interface",
+        "web"
+      ]
+    },
+    {
+      "name": "geolocator_apple",
+      "version": "2.3.14",
+      "dependencies": [
+        "flutter",
+        "geolocator_platform_interface"
+      ]
+    },
+    {
+      "name": "geolocator_android",
+      "version": "4.6.2",
+      "dependencies": [
+        "flutter",
+        "geolocator_platform_interface",
+        "meta",
+        "uuid"
+      ]
+    },
+    {
+      "name": "geolocator_platform_interface",
+      "version": "4.2.8",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "plugin_platform_interface",
+        "vector_math"
       ]
     },
     {
@@ -481,7 +540,7 @@
     },
     {
       "name": "url_launcher_android",
-      "version": "6.3.32",
+      "version": "6.3.30",
       "dependencies": [
         "flutter",
         "meta",
@@ -616,10 +675,9 @@
     },
     {
       "name": "shared_preferences_android",
-      "version": "2.4.26",
+      "version": "2.4.23",
       "dependencies": [
         "flutter",
-        "meta",
         "shared_preferences_platform_interface"
       ]
     },
@@ -741,11 +799,11 @@
       ]
     },
     {
-      "name": "path_parsing",
-      "version": "1.1.0",
+      "name": "uuid",
+      "version": "4.5.3",
       "dependencies": [
-        "meta",
-        "vector_math"
+        "crypto",
+        "fixnum"
       ]
     },
     {
@@ -753,6 +811,14 @@
       "version": "2.1.8",
       "dependencies": [
         "meta"
+      ]
+    },
+    {
+      "name": "path_parsing",
+      "version": "1.1.0",
+      "dependencies": [
+        "meta",
+        "vector_math"
       ]
     },
     {
@@ -831,16 +897,8 @@
       ]
     },
     {
-      "name": "uuid",
-      "version": "4.5.3",
-      "dependencies": [
-        "crypto",
-        "fixnum"
-      ]
-    },
-    {
       "name": "sqflite",
-      "version": "2.4.3",
+      "version": "2.4.2+1",
       "dependencies": [
         "flutter",
         "path",
@@ -874,6 +932,11 @@
     {
       "name": "vm_service",
       "version": "15.2.0",
+      "dependencies": []
+    },
+    {
+      "name": "fixnum",
+      "version": "1.1.1",
       "dependencies": []
     },
     {
@@ -929,13 +992,8 @@
       ]
     },
     {
-      "name": "fixnum",
-      "version": "1.1.1",
-      "dependencies": []
-    },
-    {
       "name": "sqflite_common",
-      "version": "2.5.9",
+      "version": "2.5.8",
       "dependencies": [
         "meta",
         "path",
@@ -944,7 +1002,7 @@
     },
     {
       "name": "sqflite_platform_interface",
-      "version": "2.4.1",
+      "version": "2.4.0",
       "dependencies": [
         "flutter",
         "meta",
@@ -955,7 +1013,7 @@
     },
     {
       "name": "sqflite_darwin",
-      "version": "2.4.3",
+      "version": "2.4.2",
       "dependencies": [
         "flutter",
         "meta",
@@ -966,7 +1024,7 @@
     },
     {
       "name": "sqflite_android",
-      "version": "2.4.3",
+      "version": "2.4.2+3",
       "dependencies": [
         "flutter",
         "path",
@@ -1011,7 +1069,7 @@
     },
     {
       "name": "synchronized",
-      "version": "3.4.1",
+      "version": "3.4.0+1",
       "dependencies": []
     },
     {

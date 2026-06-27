@@ -31,7 +31,7 @@ android {
         applicationId = "com.safecar.safecar_app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = 1
+        versionCode = 3
         versionName = "1.0.0"
     }
 
