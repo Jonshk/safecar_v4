@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "safecar_app",
-      "version": "2.0.1+2",
+      "version": "2.0.4+5",
       "dependencies": [
         "badges",
         "cached_network_image",
@@ -19,10 +19,12 @@
         "flutter_map",
         "flutter_stripe",
         "flutter_svg",
+        "font_awesome_flutter",
         "geolocator",
         "go_router",
         "google_fonts",
         "http",
+        "hugeicons",
         "intl",
         "latlong2",
         "lottie",
@@ -170,6 +172,20 @@
       "dependencies": [
         "flutter",
         "flutter_shaders"
+      ]
+    },
+    {
+      "name": "font_awesome_flutter",
+      "version": "10.12.0",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
+      "name": "hugeicons",
+      "version": "0.0.11",
+      "dependencies": [
+        "flutter"
       ]
     },
     {

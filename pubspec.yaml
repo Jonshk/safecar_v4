@@ -1,7 +1,7 @@
 name: safecar_app
 description: Safe Car Automotive — Chicago's Premier Auto Parts & Training Center
 publish_to: 'none'
-version: 2.0.1+2
+version: 2.0.4+5
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -22,6 +22,8 @@ dependencies:
   shared_preferences: ^2.3.2
   cached_network_image: ^3.4.1
   shimmer: ^3.0.0
+  hugeicons: ^0.0.7
+  font_awesome_flutter: ^10.8.0
   flutter_animate: ^4.5.0
   badges: ^3.1.2
   google_fonts: ^6.2.1

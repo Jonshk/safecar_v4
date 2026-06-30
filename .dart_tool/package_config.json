@@ -266,6 +266,12 @@
       "languageVersion": "3.10"
     },
     {
+      "name": "font_awesome_flutter",
+      "rootUri": "file:///C:/Users/Temporal/AppData/Local/Pub/Cache/hosted/pub.dev/font_awesome_flutter-10.12.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
       "name": "freezed_annotation",
       "rootUri": "file:///D:/PubCache/Cache/hosted/pub.dev/freezed_annotation-2.4.4",
       "packageUri": "lib/",
@@ -336,6 +342,12 @@
       "rootUri": "file:///D:/PubCache/Cache/hosted/pub.dev/http_parser-4.1.2",
       "packageUri": "lib/",
       "languageVersion": "3.4"
+    },
+    {
+      "name": "hugeicons",
+      "rootUri": "file:///C:/Users/Temporal/AppData/Local/Pub/Cache/hosted/pub.dev/hugeicons-0.0.11",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
     },
     {
       "name": "image",

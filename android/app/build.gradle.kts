@@ -34,8 +34,8 @@ android {
         applicationId = "com.safecar.safecar_app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = 3
-        versionName = "1.0.0"
+        versionCode = 6
+        versionName = "2.1.0"
     }
 
     // Solo se registra la firma de release SI existe key.properties con

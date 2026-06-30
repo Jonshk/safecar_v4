@@ -4,10 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'theme/app_theme.dart';
 import 'services/cart_provider.dart';
 import 'services/lang_provider.dart';
 import 'services/fcm_service.dart';
+import 'firebase_config.dart';
 import 'screens/splash_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/shop_screen.dart';
@@ -19,18 +21,6 @@ import 'screens/tow_screen.dart';
 import 'screens/booking_screen.dart';
 import 'models/models.dart';
 
-// Necesitas registrar un nuevo "Android app" dentro del MISMO proyecto
-// de Firebase (safecar-6106b) para el applicationId de la app Cliente
-// (distinto al del Admin), descargar su google-services.json, y
-// reemplazar estos valores con los que te dé la consola de Firebase.
-const _firebaseOptions = FirebaseOptions(
-  apiKey: 'AIzaSyCiyk5uooNcSEUj67oy0Ag3p4PAV5U8KeY',
-  appId: '1:14108727840:android:8f95d89388ad3b9c36fa45',
-  messagingSenderId: '14108727840',
-  projectId: 'safecar-6106b',
-  storageBucket: 'safecar-6106b.firebasestorage.app',
-);
-
 final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
@@ -39,12 +29,7 @@ void main() async {
     Stripe.publishableKey = AppTheme.stripeKey;
   } catch (_) {}
 
-  await Firebase.initializeApp(options: _firebaseOptions);
-
-  // Sin "await" a propósito — igual que en el Admin, no queremos que
-  // la app se quede en blanco esperando a que Firebase Messaging
-  // termine de pedir permisos / obtener token. Arranca la UI ya, y
-  // el FCM se termina de configurar solo en segundo plano.
+  await Firebase.initializeApp(options: firebaseOptions);
   FcmService.init(navigatorKey);
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -116,7 +101,6 @@ class MainShell extends StatefulWidget {
 }
 
 class _MainShellState extends State<MainShell> {
-  // 0=Home 1=Shop 2=Training 3=Tow 4=Book 5=Cart 6=Contact
   int _idx = 0;
   String? _shopCategory;
 
@@ -134,13 +118,13 @@ class _MainShellState extends State<MainShell> {
     final s = lang.s;
 
     final screens = [
-      HomeScreen(onNavigate: _navigate), // 0
-      ShopScreen(initialCategory: _shopCategory), // 1
-      const TrainingScreen(), // 2
-      const TowScreen(), // 3
-      const BookingScreen(), // 4
-      const CartScreen(), // 5
-      const ContactScreen(), // 6
+      HomeScreen(onNavigate: _navigate),
+      ShopScreen(initialCategory: _shopCategory),
+      const TrainingScreen(),
+      const TowScreen(),
+      const BookingScreen(),
+      const CartScreen(),
+      const ContactScreen(),
     ];
 
     final navActive = [0, 1, 4, 2, 3, -1, -1][_idx.clamp(0, 6)];
@@ -205,9 +189,8 @@ class _MainShellState extends State<MainShell> {
                   current: navActive,
                   onTap: (_) => _navigate(1),
                 ),
-                _NavItem(
-                  icon: Icons.local_shipping_outlined,
-                  activeIcon: Icons.local_shipping_rounded,
+                _HugeNavItem(
+                  hugeIcon: HugeIcons.strokeRoundedTowTruck,
                   label: 'Tow',
                   index: 2,
                   current: navActive,
@@ -270,6 +253,51 @@ class _NavItem extends StatelessWidget {
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Icon(active ? activeIcon : icon,
               color: active ? AppTheme.red : AppTheme.white30, size: 22),
+          const SizedBox(height: 3),
+          Text(label,
+              style: AppTheme.mono(9,
+                  w: FontWeight.w600,
+                  color: active ? AppTheme.red : AppTheme.white30)),
+        ]),
+      ),
+    );
+  }
+}
+
+class _HugeNavItem extends StatelessWidget {
+  final IconData hugeIcon;
+  final String label;
+  final int index, current;
+  final void Function(int) onTap;
+
+  const _HugeNavItem({
+    required this.hugeIcon,
+    required this.label,
+    required this.index,
+    required this.current,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final active = index == current;
+    return GestureDetector(
+      onTap: () => onTap(index),
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: active ? AppTheme.redGlow : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          HugeIcon(
+            icon: hugeIcon,
+            color: active ? AppTheme.red : AppTheme.white30,
+            size: 22,
+          ),
           const SizedBox(height: 3),
           Text(label,
               style: AppTheme.mono(9,

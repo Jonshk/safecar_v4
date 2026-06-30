@@ -12,3 +12,7 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# Firebase — no subir keys al repo
+lib/firebase_config.dart
+android/app/google-services.json
