@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "14108727840",
+    "project_id": "safecar-6106b",
+    "storage_bucket": "safecar-6106b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:14108727840:android:d4f4c2bf83c97c8a36fa45",
+        "android_client_info": {
+          "package_name": "com.safecar.safecar_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiyk5uooNcSEUj67oy0Ag3p4PAV5U8KeY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:14108727840:android:8f95d89388ad3b9c36fa45",
+        "android_client_info": {
+          "package_name": "com.safecar.safecar_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiyk5uooNcSEUj67oy0Ag3p4PAV5U8KeY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

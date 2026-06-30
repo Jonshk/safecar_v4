@@ -169,4 +169,77 @@ class ApiService {
       return false;
     }
   }
+
+  // ── Tow requests ─────────────────────────────────────────────
+  static Future<Map<String, dynamic>?> createTowRequest({
+    required String customerName,
+    required String customerPhone,
+    required String vehicleDescription,
+    required String pickupAddress,
+    double pickupLat = 0.0,
+    double pickupLng = 0.0,
+    String destinationAddress = '',
+    String notes = '',
+    String fcmToken = '',
+  }) async {
+    try {
+      final r = await _client
+          .post(
+            Uri.parse('$_base/tow/'),
+            headers: _headers,
+            body: jsonEncode({
+              'customer_name': customerName,
+              'customer_phone': customerPhone,
+              'vehicle_description': vehicleDescription,
+              'pickup_address': pickupAddress,
+              'pickup_lat': pickupLat,
+              'pickup_lng': pickupLng,
+              'destination_address': destinationAddress,
+              'notes': notes,
+              'fcm_token': fcmToken,
+            }),
+          )
+          .timeout(const Duration(seconds: 20));
+      if (r.statusCode == 201) return jsonDecode(r.body);
+    } catch (_) {}
+    return null;
+  }
+
+  /// Consulta pública por referencia — sin login, lo usa la pantalla
+  /// de tracking. Pega contra GET /tow/track/{reference}.
+  static Future<Map<String, dynamic>?> trackTowByReference(String reference) async {
+    try {
+      final r = await _client
+          .get(Uri.parse('$_base/tow/track/$reference'), headers: _headers)
+          .timeout(const Duration(seconds: 15));
+      if (r.statusCode == 200) return jsonDecode(r.body);
+    } catch (_) {}
+    return null;
+  }
+
+  // ── Reseñas ──────────────────────────────────────────────────
+  static Future<bool> submitReview({
+    required String customerName,
+    required int rating,
+    required String comment,
+    String serviceType = 'tow',
+  }) async {
+    try {
+      final r = await _client
+          .post(
+            Uri.parse('$_base/reviews/'),
+            headers: _headers,
+            body: jsonEncode({
+              'customer_name': customerName,
+              'rating': rating,
+              'comment': comment,
+              'service_type': serviceType,
+            }),
+          )
+          .timeout(const Duration(seconds: 15));
+      return r.statusCode == 200 || r.statusCode == 201;
+    } catch (_) {
+      return false;
+    }
+  }
 }

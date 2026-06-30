@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'theme/app_theme.dart';
 import 'services/cart_provider.dart';
 import 'services/lang_provider.dart';
+import 'services/fcm_service.dart';
 import 'screens/splash_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/shop_screen.dart';
@@ -17,11 +19,34 @@ import 'screens/tow_screen.dart';
 import 'screens/booking_screen.dart';
 import 'models/models.dart';
 
-void main() {
+// Necesitas registrar un nuevo "Android app" dentro del MISMO proyecto
+// de Firebase (safecar-6106b) para el applicationId de la app Cliente
+// (distinto al del Admin), descargar su google-services.json, y
+// reemplazar estos valores con los que te dé la consola de Firebase.
+const _firebaseOptions = FirebaseOptions(
+  apiKey: 'AIzaSyCiyk5uooNcSEUj67oy0Ag3p4PAV5U8KeY',
+  appId: '1:14108727840:android:8f95d89388ad3b9c36fa45',
+  messagingSenderId: '14108727840',
+  projectId: 'safecar-6106b',
+  storageBucket: 'safecar-6106b.firebasestorage.app',
+);
+
+final navigatorKey = GlobalKey<NavigatorState>();
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     Stripe.publishableKey = AppTheme.stripeKey;
   } catch (_) {}
+
+  await Firebase.initializeApp(options: _firebaseOptions);
+
+  // Sin "await" a propósito — igual que en el Admin, no queremos que
+  // la app se quede en blanco esperando a que Firebase Messaging
+  // termine de pedir permisos / obtener token. Arranca la UI ya, y
+  // el FCM se termina de configurar solo en segundo plano.
+  FcmService.init(navigatorKey);
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
@@ -45,6 +70,7 @@ class SafeCarApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Safe Car Automotive',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
@@ -117,8 +143,6 @@ class _MainShellState extends State<MainShell> {
       const ContactScreen(), // 6
     ];
 
-    // nav activo: Home(0) Shop(1) Tow(3) Book(4) Training(2)
-    // mapeamos _idx al índice del nav
     final navActive = [0, 1, 4, 2, 3, -1, -1][_idx.clamp(0, 6)];
 
     return Scaffold(
@@ -246,65 +270,6 @@ class _NavItem extends StatelessWidget {
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Icon(active ? activeIcon : icon,
               color: active ? AppTheme.red : AppTheme.white30, size: 22),
-          const SizedBox(height: 3),
-          Text(label,
-              style: AppTheme.mono(9,
-                  w: FontWeight.w600,
-                  color: active ? AppTheme.red : AppTheme.white30)),
-        ]),
-      ),
-    );
-  }
-}
-
-class _CartNavItem extends StatelessWidget {
-  final int current, count;
-  final void Function(int, {String? category}) onTap;
-  final String label;
-  const _CartNavItem({
-    required this.current,
-    required this.onTap,
-    required this.count,
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final active = current == 3;
-    return GestureDetector(
-      onTap: () => onTap(3),
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        decoration: BoxDecoration(
-          color: active ? AppTheme.redGlow : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Stack(clipBehavior: Clip.none, children: [
-            Icon(
-                active
-                    ? Icons.shopping_bag_rounded
-                    : Icons.shopping_bag_outlined,
-                color: active ? AppTheme.red : AppTheme.white30,
-                size: 22),
-            if (count > 0)
-              Positioned(
-                  top: -4,
-                  right: -4,
-                  child: Container(
-                    width: 14,
-                    height: 14,
-                    decoration: const BoxDecoration(
-                        color: AppTheme.red, shape: BoxShape.circle),
-                    child: Center(
-                        child: Text('$count',
-                            style: AppTheme.mono(8, w: FontWeight.w800))),
-                  )
-                      .animate()
-                      .scale(duration: 200.ms, curve: Curves.elasticOut)),
-          ]),
           const SizedBox(height: 3),
           Text(label,
               style: AppTheme.mono(9,

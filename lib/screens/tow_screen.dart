@@ -1,12 +1,11 @@
 // lib/screens/tow_screen.dart
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../theme/app_theme.dart';
-
-const _kBase = 'https://safecar-backend.onrender.com';
+import '../services/api_service.dart';
+import 'track_screen.dart';
 
 class TowScreen extends StatefulWidget {
   const TowScreen({super.key});
@@ -117,34 +116,37 @@ class _TowScreenState extends State<TowScreen> {
   Future<void> _submit() async {
     if (!_form.currentState!.validate()) return;
     setState(() => _loading = true);
+
+    // Captura el token FCM para que el backend pueda notificarle al
+    // cliente cuando el admin cambie el estado. Si Firebase no está
+    // listo o falla, seguimos sin token (el cliente igual puede
+    // consultar manualmente con su referencia).
+    String fcmToken = '';
     try {
-      final res = await http.post(
-        Uri.parse('$_kBase/tow/'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'customer_name': _name.text.trim(),
-          'customer_phone': _phone.text.trim(),
-          'vehicle_description': _vehicle.text.trim(),
-          'pickup_address': _pickup.text.trim(),
-          'pickup_lat': _lat ?? 0.0,
-          'pickup_lng': _lng ?? 0.0,
-          'destination_address': _destination.text.trim(),
-          'notes': _notes.text.trim(),
-        }),
-      );
-      if (res.statusCode == 201) {
-        final data = jsonDecode(res.body);
-        setState(() {
-          _submitted = true;
-          _reference = data['reference'];
-        });
-      } else {
-        _showError('Server error (${res.statusCode}). Try again.');
-      }
-    } catch (_) {
-      _showError('No connection. Check your internet.');
-    } finally {
-      setState(() => _loading = false);
+      fcmToken = await FirebaseMessaging.instance.getToken() ?? '';
+    } catch (_) {}
+
+    final result = await ApiService.createTowRequest(
+      customerName: _name.text.trim(),
+      customerPhone: _phone.text.trim(),
+      vehicleDescription: _vehicle.text.trim(),
+      pickupAddress: _pickup.text.trim(),
+      pickupLat: _lat ?? 0.0,
+      pickupLng: _lng ?? 0.0,
+      destinationAddress: _destination.text.trim(),
+      notes: _notes.text.trim(),
+      fcmToken: fcmToken,
+    );
+
+    setState(() => _loading = false);
+
+    if (result != null) {
+      setState(() {
+        _submitted = true;
+        _reference = result['reference'];
+      });
+    } else {
+      _showError('Could not send your request. Check your connection.');
     }
   }
 
@@ -507,7 +509,28 @@ class _SuccessView extends StatelessWidget {
                 style: AppTheme.mono(11, color: AppTheme.white30)),
           ]),
         ).animate(delay: 400.ms).fadeIn(),
-        const SizedBox(height: 32),
+        const SizedBox(height: 20),
+        GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => TrackScreen(initialReference: reference),
+            ),
+          ),
+          child: Container(
+            height: 48,
+            decoration: BoxDecoration(
+              color: AppTheme.redGlow,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: AppTheme.red.withOpacity(0.4)),
+            ),
+            child: Center(
+              child: Text('TRACK LIVE',
+                  style: AppTheme.mono(13, w: FontWeight.w700, color: AppTheme.red)),
+            ),
+          ),
+        ).animate(delay: 450.ms).fadeIn(),
+        const SizedBox(height: 14),
         GestureDetector(
           onTap: onNew,
           child: Container(
