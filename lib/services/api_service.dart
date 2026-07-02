@@ -217,7 +217,33 @@ class ApiService {
     return null;
   }
 
-  // ── Reseñas ──────────────────────────────────────────────────
+  // ── Chat ─────────────────────────────────────────────────
+  static Future<List<Map<String, dynamic>>> getChatMessages(int towId, {int afterId = 0}) async {
+    try {
+      final r = await _client
+          .get(Uri.parse('$_base/chat/$towId?after_id=$afterId'), headers: _headers)
+          .timeout(const Duration(seconds: 10));
+      if (r.statusCode == 200) return List<Map<String, dynamic>>.from(jsonDecode(r.body));
+    } catch (_) {}
+    return [];
+  }
+
+  static Future<bool> sendChatMessage({
+    required int towId,
+    required String sender,
+    required String senderName,
+    required String text,
+  }) async {
+    try {
+      final r = await _client
+          .post(Uri.parse('$_base/chat/'), headers: _headers,
+              body: jsonEncode({'tow_id': towId, 'sender': sender, 'sender_name': senderName, 'text': text}))
+          .timeout(const Duration(seconds: 10));
+      return r.statusCode == 201;
+    } catch (_) {
+      return false;
+    }
+  }
   static Future<bool> submitReview({
     required String customerName,
     required int rating,

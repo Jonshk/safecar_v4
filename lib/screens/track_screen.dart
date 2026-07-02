@@ -9,6 +9,7 @@ import '../services/api_service.dart';
 import '../services/lang_provider.dart';
 import '../widgets/status_animation_overlay.dart';
 import 'rate_service_screen.dart';
+import 'chat_screen.dart';
 
 /// Pantalla pública de seguimiento de grúa. El cliente entra su
 /// referencia (sin login) y ve el estado + mapa en vivo del técnico
@@ -287,6 +288,38 @@ class _TrackScreenState extends State<TrackScreen> {
             const SizedBox(height: 16),
             _InfoRow(label: s.isEs ? 'Vehículo' : 'Vehicle', value: data['vehicle_description']),
             _InfoRow(label: s.isEs ? 'Recogida' : 'Pickup', value: data['pickup_address'] ?? ''),
+          ],
+          const SizedBox(height: 24),
+          // Botón de chat con el técnico
+          if (status == 'confirmed' || status == 'in_progress') ...[
+            GestureDetector(
+              onTap: () => Navigator.push(context, MaterialPageRoute(
+                builder: (_) => ChatScreen(
+                  towId: data['id'] as int? ?? 0,
+                  customerName: data['customer_name'] ?? 'Cliente',
+                ),
+              )),
+              child: Container(
+                height: 52,
+                decoration: BoxDecoration(
+                  color: AppTheme.surface,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: AppTheme.border),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.chat_bubble_outline_rounded, color: AppTheme.red, size: 20),
+                    const SizedBox(width: 10),
+                    Text(
+                      s.isEs ? 'Chatear con el técnico' : 'Chat with technician',
+                      style: AppTheme.body(14, w: FontWeight.w600, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
           ],
         ],
       ),
