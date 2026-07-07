@@ -267,7 +267,7 @@
     },
     {
       "name": "font_awesome_flutter",
-      "rootUri": "file:///C:/Users/Temporal/AppData/Local/Pub/Cache/hosted/pub.dev/font_awesome_flutter-10.12.0",
+      "rootUri": "file:///D:/PubCache/Cache/hosted/pub.dev/font_awesome_flutter-10.12.0",
       "packageUri": "lib/",
       "languageVersion": "3.9"
     },
@@ -345,7 +345,7 @@
     },
     {
       "name": "hugeicons",
-      "rootUri": "file:///C:/Users/Temporal/AppData/Local/Pub/Cache/hosted/pub.dev/hugeicons-0.0.11",
+      "rootUri": "file:///D:/PubCache/Cache/hosted/pub.dev/hugeicons-0.0.11",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
