@@ -1,175 +1,164 @@
 import 'package:flutter/material.dart';
 
 class AppStrings {
-  final String lang;
-  const AppStrings._(this.lang);
+  final bool isEs;
+  const AppStrings(this.isEs);
 
-  static const en = AppStrings._('en');
-  static const es = AppStrings._('es');
-
-  bool get isEs => lang == 'es';
-
-  // ── General ──────────────────────────────────────────────────
-  String get appName => 'Safe Car Automotive';
-  String get chicago => 'CHICAGO, IL · EST. 2012';
-  String get seeAll => isEs ? 'VER TODO →' : 'SEE ALL →';
-  String get pullRefresh =>
-      isEs ? 'Desliza para actualizar' : 'Pull to refresh';
-  String get loading => isEs ? 'Cargando...' : 'Loading...';
-  String get noResults => isEs ? 'Sin resultados' : 'No results';
-  String get retry => isEs ? 'Reintentar' : 'Retry';
-  String get cancel => isEs ? 'Cancelar' : 'Cancel';
-  String get send => isEs ? 'ENVIAR' : 'SEND';
-  String get close => isEs ? 'Cerrar' : 'Close';
-  String get clear => isEs ? 'Limpiar' : 'Clear';
-
-  // ── Splash ───────────────────────────────────────────────────
-  String get splashConnecting => isEs ? 'CONECTANDO...' : 'CONNECTING...';
-  String get splashOnline => isEs ? 'SERVIDOR EN LÍNEA ✓' : 'SERVER ONLINE ✓';
-  String get splashOffline => isEs ? 'MODO OFFLINE' : 'OFFLINE MODE';
-  String get splashLoading => isEs ? 'CARGANDO...' : 'LOADING...';
-  String get splashReady => isEs ? 'LISTO' : 'READY';
-
-  // ── Nav ──────────────────────────────────────────────────────
+  // ── Nav ──────────────────────────────────────────────────
   String get navHome => isEs ? 'Inicio' : 'Home';
   String get navShop => isEs ? 'Tienda' : 'Shop';
   String get navTraining => isEs ? 'Cursos' : 'Training';
-  String get navCart => isEs ? 'Carrito' : 'Cart';
-  String get navContact => isEs ? 'Contacto' : 'Contact';
+  String get seeAll => isEs ? 'Ver todo' : 'See all';
 
-  // ── Home ─────────────────────────────────────────────────────
-  String get homeTagline => isEs
-      ? 'La fuente premier de Chicago para\nrefacciones y capacitación profesional.'
-      : "Chicago's premier source for\nauto parts & professional training.";
-  String get homeShopParts => isEs ? 'VER REFACCIONES' : 'SHOP PARTS';
-  // FIX: era 'CATEGORIES' hardcodeado, ahora respeta el idioma
-  String get homeCategories => isEs ? 'CATEGORÍAS' : 'CATEGORIES';
-  String get homeFeatured => isEs ? 'DESTACADOS' : 'FEATURED PARTS';
-  String get homeStats1 => isEs ? 'Refacciones\nEn Stock' : 'Parts\nIn Stock';
-  String get homeStats2 => isEs ? 'Años de\nExperiencia' : 'Years\nExperience';
-  String get homeStats3 =>
-      isEs ? 'Satisfacción\nde Clientes' : 'Customer\nSatisfaction';
-  String get homeBannerTitle =>
-      isEs ? '¿NECESITAS UNA PARTE ESPECIAL?' : 'NEED A CUSTOM PART?';
-  String get homeBannerSub =>
-      isEs ? 'Obtén una cotización gratis →' : 'Get a free quote in minutes →';
-  String get homeNoPartsTitle =>
-      isEs ? 'Sin refacciones cargadas' : 'No parts loaded yet';
-  String get homeNoPartsSub =>
-      isEs ? 'Desliza para actualizar' : 'Pull to refresh';
-  String get homeLive => isEs ? 'EN VIVO · CHICAGO, IL' : 'LIVE · CHICAGO, IL';
+  // ── Splash ───────────────────────────────────────────────
+  String get splashConnecting => isEs ? 'Conectando...' : 'Connecting...';
+  String get splashOnline => isEs ? 'En línea' : 'Online';
+  String get splashOffline => isEs ? 'Sin conexión' : 'Offline';
 
-  // ── Categories ───────────────────────────────────────────────
+  // ── Home ─────────────────────────────────────────────────
+  String get homeLive => isEs ? 'En vivo' : 'Live';
+  String get homeTagline => isEs ? 'Tu taller de confianza en Chicago' : 'Your trusted shop in Chicago';
+  String get homeShopParts => isEs ? 'Ver repuestos' : 'Shop parts';
+  String get homeStats1 => isEs ? 'Clientes felices' : 'Happy customers';
+  String get homeStats2 => isEs ? 'Años de experiencia' : 'Years of experience';
+  String get homeStats3 => isEs ? 'Satisfacción' : 'Satisfaction';
+  String get homeStats => isEs ? 'Estadísticas' : 'Stats';
+  String get homeCategories => isEs ? 'Categorías' : 'Categories';
+  String get homeFeatured => isEs ? 'Destacados' : 'Featured';
+  String get homeBannerTitle => isEs ? 'Diagnóstico gratis' : 'Free Diagnostics';
+  String get homeBannerSub => isEs ? 'Trae tu vehículo y lo revisamos sin costo' : 'Bring your vehicle for a free check';
+  String get homeNoPartsTitle => isEs ? 'Sin repuestos' : 'No parts found';
+  String get homeNoPartsSub => isEs ? 'Intenta con otra categoría' : 'Try another category';
+
+  // ── Categories ───────────────────────────────────────────
   String get catEngine => isEs ? 'Motor' : 'Engine';
   String get catBody => isEs ? 'Carrocería' : 'Body';
   String get catElectrical => isEs ? 'Eléctrico' : 'Electrical';
   String get catSuspension => isEs ? 'Suspensión' : 'Suspension';
   String get catFluids => isEs ? 'Fluidos' : 'Fluids';
 
-  // ── Shop ─────────────────────────────────────────────────────
-  String get shopTitle => isEs ? 'TIENDA' : 'PARTS SHOP';
-  String get shopSubtitle => isEs ? 'Refacciones' : 'Auto Parts';
-  String get shopSearch =>
-      isEs ? 'Buscar refacciones, SKU...' : 'Search parts, SKU...';
-  String get shopAll => isEs ? 'Todas' : 'All';
-  String get shopNoPartsTitle => isEs ? 'Sin refacciones' : 'No parts found';
-  String get shopNoPartsSub => isEs
-      ? 'Intenta otra búsqueda o categoría'
-      : 'Try a different search or category';
-  String get shopInStock => isEs ? 'EN STOCK' : 'IN STOCK';
-  String get shopOutStock => isEs ? 'AGOTADO' : 'OUT OF STOCK';
-  String get shopEach => isEs ? 'c/u' : 'each';
+  // ── Shop ─────────────────────────────────────────────────
+  String get shopTitle => isEs ? 'Repuestos' : 'Parts';
+  String get shopSubtitle => isEs ? 'Calidad garantizada' : 'Quality guaranteed';
+  String get shopSearch => isEs ? 'Buscar repuestos...' : 'Search parts...';
+  String get shopAll => isEs ? 'Todos' : 'All';
+  String get shopInStock => isEs ? 'En stock' : 'In stock';
+  String get shopOutStock => isEs ? 'Sin stock' : 'Out of stock';
+  String get shopNoPartsTitle => isEs ? 'Sin resultados' : 'No results';
+  String get shopNoPartsSub => isEs ? 'Intenta con otra búsqueda' : 'Try a different search';
 
-  // ── Part Detail ──────────────────────────────────────────────
-  String get detailDescription => isEs ? 'DESCRIPCIÓN' : 'DESCRIPTION';
-  String get detailUnitsAvailable =>
-      isEs ? 'unidades disponibles' : 'units available';
-  String get detailAddCart => isEs ? 'AGREGAR AL CARRITO' : 'ADD TO CART';
-  String get detailAdded => isEs ? 'AGREGADO ✓' : 'ADDED TO CART ✓';
-  String get detailAddedSnack => isEs ? 'agregado al carrito' : 'added to cart';
+  // ── Part detail ──────────────────────────────────────────
+  String get detailDescription => isEs ? 'Descripción' : 'Description';
+  String get detailUnitsAvailable => isEs ? 'unidades disponibles' : 'units available';
+  String get detailAdded => isEs ? 'Agregado' : 'Added';
+  String get detailAddCart => isEs ? 'Agregar al carrito' : 'Add to cart';
+  String get detailAddedSnack => isEs ? 'Agregado al carrito' : 'Added to cart';
 
-  // ── Training ─────────────────────────────────────────────────
-  String get trainingTag => isEs ? 'CENTRO DE CAPACITACIÓN' : 'TRAINING CENTER';
-  String get trainingTitle => isEs ? 'Cursos' : 'Courses';
-  String get trainingBannerTitle =>
-      isEs ? 'CERTIFICACIÓN\nPROFESIONAL' : 'PROFESSIONAL\nCERTIFICATION';
-  String get trainingBannerSub => isEs
-      ? 'Programas de capacitación automotriz\nreconocidos por la industria.'
-      : 'Industry-recognized automotive\ntraining programs.';
-  String get trainingAllCourses => isEs ? 'TODOS LOS CURSOS' : 'ALL COURSES';
-  String get trainingNoneTitle =>
-      isEs ? 'Sin cursos disponibles' : 'No courses available';
-  String get trainingNoneSub => isEs ? '¡Vuelve pronto!' : 'Check back soon!';
-
-  // ── Cart ─────────────────────────────────────────────────────
-  String get cartTag => isEs ? 'MI CARRITO' : 'MY CART';
-  String get cartItems => isEs ? 'artículos' : 'items';
+  // ── Cart ─────────────────────────────────────────────────
+  String get cartTag => isEs ? 'CARRITO' : 'CART';
+  String get cartEmpty => isEs ? 'Carrito vacío' : 'Empty cart';
+  String get cartEmptySub => isEs ? 'Agrega repuestos desde la tienda' : 'Add parts from the shop';
   String get cartItem => isEs ? 'artículo' : 'item';
-  String get cartClearAll => isEs ? 'Vaciar todo' : 'Clear all';
-  String get cartClearTitle => isEs ? '¿Vaciar carrito?' : 'Clear cart?';
-  String get cartClearSub => isEs
-      ? 'Esto eliminará todos los artículos.'
-      : 'This will remove all items.';
   String get cartSubtotal => isEs ? 'Subtotal' : 'Subtotal';
   String get cartShipping => isEs ? 'Envío' : 'Shipping';
-  String get cartShippingTbd => 'TBD';
-  String get cartTotal => 'TOTAL';
-  String get cartCheckout => isEs ? 'PROCEDER AL PAGO' : 'PROCEED TO CHECKOUT';
-  String get cartEmpty => isEs ? 'Tu carrito está vacío' : 'Your cart is empty';
-  String get cartEmptySub =>
-      isEs ? 'Agrega refacciones para comenzar' : 'Add parts to get started';
-  String get cartSwipeDelete =>
-      isEs ? 'Desliza para eliminar' : 'Swipe to delete';
-
-  // ── Checkout ─────────────────────────────────────────────────
-  String get checkoutTitle => isEs ? 'FINALIZAR PEDIDO' : 'CHECKOUT';
-  String get checkoutName => isEs ? 'Nombre completo' : 'Full Name';
-  String get checkoutEmail => 'Email';
+  String get cartClearTitle => isEs ? 'Vaciar carrito' : 'Clear cart';
+  String get cartClearSub => isEs ? '¿Eliminar todos los artículos?' : 'Remove all items?';
+  String get cartClearAll => isEs ? 'Vaciar todo' : 'Clear all';
+  String get checkoutName => isEs ? 'Nombre completo' : 'Full name';
+  String get checkoutEmail => isEs ? 'Correo electrónico' : 'Email';
   String get checkoutPhone => isEs ? 'Teléfono' : 'Phone';
-  String get checkoutMessage =>
-      isEs ? 'Mensaje (opcional)' : 'Message (optional)';
-  String get checkoutSend => isEs ? 'CONFIRMAR PEDIDO' : 'PLACE ORDER';
-  String get checkoutSuccessTitle =>
-      isEs ? '¡Pedido Enviado!' : 'Order Placed!';
-  String get checkoutSuccessSub =>
-      isEs ? 'Te responderemos pronto.' : "We'll get back to you shortly.";
 
-  // ── Contact ──────────────────────────────────────────────────
+  // ── Training ─────────────────────────────────────────────
+  String get trainingTag => isEs ? 'FORMACIÓN' : 'TRAINING';
+  String get trainingTitle => isEs ? 'Cursos disponibles' : 'Available courses';
+  String get trainingBannerTitle => isEs ? 'Certifícate con nosotros' : 'Get certified with us';
+  String get trainingBannerSub => isEs ? 'Formación práctica por profesionales' : 'Hands-on training by professionals';
+  String get trainingNoneTitle => isEs ? 'Sin cursos' : 'No courses';
+  String get trainingNoneSub => isEs ? 'Vuelve pronto' : 'Check back soon';
+
+  // ── Contact ──────────────────────────────────────────────
   String get contactTag => isEs ? 'CONTACTO' : 'CONTACT';
-  String get contactTitle => isEs ? 'Contáctanos' : 'Get In Touch';
-  String get contactPhone => isEs ? 'TELÉFONO' : 'PHONE';
-  String get contactPhoneSub =>
-      isEs ? 'Lun-Sáb 8am-6pm' : 'Call us Mon-Sat 8am-6pm';
-  String get contactEmailSub =>
-      isEs ? 'Respondemos en 24 horas' : 'We reply within 24 hours';
-  String get contactAddress => isEs ? 'DIRECCIÓN' : 'ADDRESS';
-  String get contactAddressSub => 'Chicago, IL 60601';
-  String get contactHours => isEs ? 'HORARIO' : 'BUSINESS HOURS';
-  String get contactAbout => isEs ? 'NOSOTROS' : 'ABOUT US';
+  String get contactTitle => isEs ? 'Estamos aquí para ayudarte' : 'We\'re here to help';
+  String get contactPhone => isEs ? 'Teléfono' : 'Phone';
+  String get contactPhoneSub => isEs ? 'Llámanos' : 'Call us';
+  String get contactEmailSub => isEs ? 'Escríbenos' : 'Email us';
+  String get contactAddress => isEs ? 'Dirección' : 'Address';
+  String get contactAbout => isEs ? 'Sobre nosotros' : 'About us';
+  String get contactClosed => isEs ? 'Cerrado' : 'Closed';
   String get contactAboutText => isEs
-      ? 'Safe Car Automotive lleva más de 12 años sirviendo a la comunidad automotriz de Chicago. Nos especializamos en refacciones OEM y de aftermarket para todas las marcas principales, y ofrecemos programas de capacitación profesional para técnicos automotrices.\n\nNuestro compromiso es proveer refacciones de calidad a precios competitivos, respaldados por conocimiento experto y un servicio al cliente insuperable.'
-      : "Safe Car Automotive has been serving Chicago's automotive community for over 12 years. We specialize in OEM and aftermarket parts for all major vehicle brands, and offer professional training programs for automotive technicians.\n\nOur commitment is to provide quality parts at competitive prices, backed by expert knowledge and unmatched customer service.";
-  String get contactHoursMF => isEs ? 'Lunes - Viernes' : 'Mon - Fri';
-  String get contactHoursSat => isEs ? 'Sábado' : 'Saturday';
-  String get contactHoursSun => isEs ? 'Domingo' : 'Sunday';
-  String get contactClosed => isEs ? 'CERRADO' : 'CLOSED';
-  String get contactCopied => isEs ? 'Copiado' : 'Copied';
+      ? 'Safe Car Automotive es tu taller de confianza en Chicago. Más de 10 años de experiencia en reparación, diagnóstico y formación automotriz.'
+      : 'Safe Car Automotive is your trusted shop in Chicago. Over 10 years of experience in auto repair, diagnostics and training.';
+
+  // ── Tow screen ───────────────────────────────────────────
+  String get towTitle => isEs ? 'SERVICIO DE GRÚA' : 'TOW SERVICE';
+  String get towSubtitle => isEs ? 'Grúa de emergencia 24/7' : '24/7 Emergency Towing';
+  String get towMyRequests => isEs ? 'MIS SOLICITUDES' : 'MY REQUESTS';
+  String get towEta => isEs ? 'ETA 30–45 min' : '30–45 min ETA';
+  String get towLicensed => isEs ? 'Operadores certificados' : 'Licensed operators';
+  String get towLocationBtn => isEs ? 'Compartir mi ubicación' : 'Share my location';
+  String get towLocationOk => isEs ? 'Ubicación obtenida' : 'Location captured';
+  String get towLocationError => isEs ? 'Error de ubicación' : 'Location failed';
+  String get towLocationTapAgain => isEs ? 'Toca para intentar de nuevo' : 'Tap to try again';
+  String get towLocationTap => isEs ? 'Toca para enviar tu GPS exacto' : 'Tap to send your exact GPS position';
+  String get towSectionYou => isEs ? 'TUS DATOS' : 'YOUR INFORMATION';
+  String get towSectionVehicle => isEs ? 'VEHÍCULO Y UBICACIÓN' : 'VEHICLE & LOCATION';
+  String get towNameField => isEs ? 'Nombre completo' : 'Full name';
+  String get towPhoneField => isEs ? 'Número de teléfono' : 'Phone number';
+  String get towVehicleField => isEs ? 'Vehículo (Año, Marca, Modelo)' : 'Vehicle (Year, Make, Model)';
+  String get towPickupField => isEs ? 'Dirección de recogida / ubicación' : 'Pickup address / location';
+  String get towDestField => isEs ? 'Destino (opcional)' : 'Destination (optional)';
+  String get towNotesField => isEs ? 'Notas adicionales (opcional)' : 'Additional notes (optional)';
+  String get towSubmitBtn => isEs ? 'SOLICITAR GRÚA' : 'REQUEST TOW';
+  String get towRequired => isEs ? 'Requerido' : 'Required';
+  String get towSuccessTitle => isEs ? 'SOLICITUD ENVIADA' : 'TOW REQUESTED';
+  String get towSuccessSub => isEs ? 'Un despachador te llamará pronto.' : 'A dispatcher will call you shortly.';
+  String get towRefLabel => isEs ? 'REFERENCIA' : 'REFERENCE';
+  String get towRefSaved => isEs ? 'Guardado — ver "Mis solicitudes"' : 'Saved — see "My Requests"';
+  String get towTrackBtn => isEs ? 'SEGUIR EN VIVO' : 'TRACK LIVE';
+  String get towNewBtn => isEs ? 'Nueva solicitud' : 'New Request';
+
+  // ── Track screen ─────────────────────────────────────────
+  String get trackTitle => isEs ? 'Mi solicitud' : 'My request';
+  String get trackSearchTitle => isEs ? 'Rastrear mi solicitud' : 'Track my request';
+  String get trackSearchSub => isEs ? 'Introduce tu código de referencia' : 'Enter your reference code';
+  String get trackSearchBtn => isEs ? 'BUSCAR' : 'SEARCH';
+  String get trackSearchAnother => isEs ? 'Buscar otra' : 'Search another';
+  String get trackChatOpen => isEs ? 'Chat' : 'Chat';
+  String get trackChatClose => isEs ? 'Cerrar' : 'Close';
+  String get trackChatPlaceholder => isEs ? 'Escribe un mensaje...' : 'Type a message...';
+  String get trackChatEmpty => isEs ? 'Escríbele al técnico' : 'Message the technician';
+  String get trackPickup => isEs ? 'Recogida' : 'Pickup';
+  String get trackDest => isEs ? 'Destino' : 'Destination';
+
+  // ── Status ───────────────────────────────────────────────
+  String statusLabel(String status) => switch (status) {
+    'pending'     => isEs ? 'Solicitud recibida' : 'Request received',
+    'confirmed'   => isEs ? 'Confirmado · Técnico asignado' : 'Confirmed · Technician assigned',
+    'in_progress' => isEs ? 'En camino hacia ti' : 'On the way',
+    'completed'   => isEs ? 'Servicio completado' : 'Service completed',
+    'cancelled'   => isEs ? 'Cancelado' : 'Cancelled',
+    _             => status,
+  };
+
+  String animLabel(String status) => switch (status) {
+    'confirmed'   => isEs ? 'CONFIRMADO' : 'CONFIRMED',
+    'in_progress' => isEs ? 'EN CAMINO' : 'ON THE WAY',
+    'completed'   => isEs ? 'COMPLETADO' : 'COMPLETED',
+    _             => '',
+  };
+
+  String animSublabel(String status) => switch (status) {
+    'confirmed'   => isEs ? 'Un técnico fue asignado' : 'A technician was assigned',
+    'in_progress' => isEs ? 'Tu técnico va en camino' : 'Your technician is on the way',
+    'completed'   => isEs ? '¡Servicio finalizado!' : 'Service completed!',
+    _             => '',
+  };
 }
 
-// ── Language Provider ─────────────────────────────────────────────
 class LangProvider extends ChangeNotifier {
-  AppStrings _strings = AppStrings.es; // default español
-
-  AppStrings get s => _strings;
-  bool get isEs => _strings.isEs;
-
-  void toggle() {
-    _strings = isEs ? AppStrings.en : AppStrings.es;
-    notifyListeners();
-  }
-
-  void setLang(String lang) {
-    _strings = lang == 'es' ? AppStrings.es : AppStrings.en;
-    notifyListeners();
-  }
+  bool _isEs = true;
+  bool get isEs => _isEs;
+  AppStrings get s => AppStrings(_isEs);
+  void toggle() { _isEs = !_isEs; notifyListeners(); }
+  void setEs(bool v) { _isEs = v; notifyListeners(); }
 }
