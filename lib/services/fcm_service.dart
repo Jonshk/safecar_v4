@@ -28,7 +28,7 @@ class FcmService {
   static const _channelName = 'Safe Car';
   static const _channelDesc = 'Actualizaciones de tu grúa, reserva o pedido';
 
-  static const _animatedStatuses = {'confirmed', 'in_progress', 'completed'};
+  static const _animatedStatuses = {'confirmed', 'in_progress', 'arrived', 'completed', 'cancelled'};
 
   static Future<void> init(GlobalKey<NavigatorState> navigatorKey) async {
     _navigatorKey = navigatorKey;
@@ -116,7 +116,19 @@ class FcmService {
           sublabel: 'Tu técnico va en camino',
           color: AppTheme.red,
         ),
-      'completed' => (
+      'arrived' => (
+          asset: 'assets/lottie/arrived.json',
+          label: 'LLEGÓ',
+          sublabel: 'Tu técnico está en tu ubicación',
+          color: const Color(0xFF22C55E),
+        ),
+        'cancelled' => (
+          asset: 'assets/lottie/cancelled.json',
+          label: 'CANCELADO',
+          sublabel: 'La solicitud fue cancelada',
+          color: Colors.grey,
+        ),
+        'completed' => (
           asset: 'assets/lottie/completed.json',
           label: 'COMPLETADO',
           sublabel: '¡Servicio finalizado con éxito!',

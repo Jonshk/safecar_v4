@@ -143,6 +143,7 @@ class AppStrings {
   String animLabel(String status) => switch (status) {
     'confirmed'   => isEs ? 'CONFIRMADO' : 'CONFIRMED',
     'in_progress' => isEs ? 'EN CAMINO' : 'ON THE WAY',
+    'arrived'     => isEs ? '¡LLEGÓ!' : 'ARRIVED!',
     'completed'   => isEs ? 'COMPLETADO' : 'COMPLETED',
     _             => '',
   };
@@ -150,6 +151,7 @@ class AppStrings {
   String animSublabel(String status) => switch (status) {
     'confirmed'   => isEs ? 'Un técnico fue asignado' : 'A technician was assigned',
     'in_progress' => isEs ? 'Tu técnico va en camino' : 'Your technician is on the way',
+    'arrived'     => isEs ? 'Tu técnico está en tu ubicación' : 'Your technician is at your location',
     'completed'   => isEs ? '¡Servicio finalizado!' : 'Service completed!',
     _             => '',
   };

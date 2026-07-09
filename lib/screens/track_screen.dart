@@ -35,6 +35,11 @@ class _TrackScreenState extends State<TrackScreen> {
   bool _sendingMsg = false;
   bool _chatExpanded = false;
 
+  // Mapa redimensionable
+  double _mapHeight = 280;
+  static const _minMap = 80.0;
+  static const _maxMap = 500.0;
+
   @override
   void initState() {
     super.initState();
@@ -71,7 +76,7 @@ class _TrackScreenState extends State<TrackScreen> {
   }
 
   void _maybeTriggerAnim(String? newStatus) {
-    const animated = {'confirmed', 'in_progress', 'completed'};
+    const animated = {'confirmed', 'in_progress', 'arrived', 'completed', 'cancelled'};
     if (_lastSeenStatus != null && _lastSeenStatus != newStatus && animated.contains(newStatus)) {
       setState(() => _pendingAnimationStatus = newStatus);
     }
@@ -155,13 +160,13 @@ class _TrackScreenState extends State<TrackScreen> {
     final pickLat = (data['pickup_lat'] as num?)?.toDouble() ?? 0;
     final pickLng = (data['pickup_lng'] as num?)?.toDouble() ?? 0;
     final hasGps = techLat != 0 && techLng != 0;
-    final showChat = status == 'confirmed' || status == 'in_progress';
+    final showChat = status == 'confirmed' || status == 'in_progress' || status == 'arrived';
 
     return Column(
       children: [
         // ── MAPA ──────────────────────────────────────────────────
-        Expanded(
-          flex: _chatExpanded ? 2 : 5,
+        SizedBox(
+          height: _mapHeight,
           child: Stack(
             children: [
               FlutterMap(
@@ -227,9 +232,30 @@ class _TrackScreenState extends State<TrackScreen> {
           ),
         ),
 
+        // Handle para redimensionar el mapa
+        GestureDetector(
+          onVerticalDragUpdate: (d) {
+            setState(() {
+              _mapHeight = (_mapHeight + d.delta.dy).clamp(_minMap, _maxMap);
+            });
+          },
+          child: Container(
+            height: 18,
+            color: AppTheme.bgCard,
+            child: Center(
+              child: Container(
+                width: 40, height: 4,
+                decoration: BoxDecoration(
+                  color: AppTheme.border,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+          ),
+        ),
+
         // ── INFO + CHAT ───────────────────────────────────────────
         Expanded(
-          flex: _chatExpanded ? 3 : 2,
           child: Container(
             decoration: BoxDecoration(
               color: AppTheme.bg,
@@ -383,6 +409,7 @@ class _TrackScreenState extends State<TrackScreen> {
     final color = switch (status) {
       'confirmed' => Colors.amber,
       'in_progress' => Colors.orange,
+      'arrived' => const Color(0xFF22C55E),
       'completed' => const Color(0xFF22C55E),
       'cancelled' => Colors.grey,
       _ => AppTheme.white30,
@@ -394,8 +421,10 @@ class _TrackScreenState extends State<TrackScreen> {
     'pending' => s.isEs ? 'Solicitud recibida' : 'Request received',
     'confirmed' => s.isEs ? 'Confirmado · Técnico asignado' : 'Confirmed · Technician assigned',
     'in_progress' => s.isEs ? 'En camino hacia ti' : 'On the way',
+    'arrived' => s.isEs ? '¡Tu técnico llegó!' : 'Technician arrived!',
     'completed' => s.isEs ? 'Servicio completado' : 'Service completed',
     'cancelled' => s.isEs ? 'Cancelado' : 'Cancelled',
+    'arrived' => s.isEs ? '¡Tu técnico llegó!' : 'Technician arrived!',
     _ => status,
   };
 
@@ -449,6 +478,8 @@ class _TrackScreenState extends State<TrackScreen> {
     final config = switch (status) {
       'confirmed' => (asset: 'assets/lottie/confirmed.json', label: s.isEs ? 'CONFIRMADO' : 'CONFIRMED', sublabel: s.isEs ? 'Un técnico fue asignado' : 'A technician was assigned', color: Colors.amber),
       'in_progress' => (asset: 'assets/lottie/car_launch.json', label: s.isEs ? 'EN CAMINO' : 'ON THE WAY', sublabel: s.isEs ? 'Tu técnico va en camino' : 'Your technician is on the way', color: AppTheme.red),
+      'cancelled' => (asset: 'assets/lottie/cancelled.json', label: s.isEs ? 'CANCELADO' : 'CANCELLED', sublabel: s.isEs ? 'La solicitud fue cancelada' : 'The request was cancelled', color: Colors.grey),
+      'arrived' => (asset: 'assets/lottie/arrived.json', label: s.isEs ? '¡LLEGÓ!' : 'ARRIVED!', sublabel: s.isEs ? 'Tu técnico está en tu ubicación' : 'Your technician is at your location', color: const Color(0xFF22C55E)),
       'completed' => (asset: 'assets/lottie/completed.json', label: s.isEs ? 'COMPLETADO' : 'COMPLETED', sublabel: s.isEs ? '¡Servicio finalizado!' : 'Service completed!', color: const Color(0xFF22C55E)),
       _ => (asset: 'assets/lottie/confirmed.json', label: '', sublabel: null as String?, color: AppTheme.red),
     };
