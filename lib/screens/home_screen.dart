@@ -6,6 +6,8 @@ import '../models/models.dart';
 import '../services/api_service.dart';
 import '../services/lang_provider.dart';
 import '../widgets/shared.dart';
+import 'booking_screen.dart';
+import 'body_shop_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(int, {String? category}) onNavigate;
@@ -50,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _hero(s, lang),
           SliverToBoxAdapter(child: _stats(s)),
           SliverToBoxAdapter(child: _categories(s)),
+          SliverToBoxAdapter(child: _bodyShopSection(s)),
           SliverToBoxAdapter(child: _featuredHeader(s)),
           _featuredGrid(s),
           SliverToBoxAdapter(child: _banner(s)),
@@ -348,6 +351,90 @@ class _HomeScreenState extends State<HomeScreen> {
             childCount: _featured.length),
       ),
     );
+  }
+
+  Widget _bodyShopSection(s) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 28, 16, 0),
+      child: GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ChangeNotifierProvider.value(
+              value: context.read<LangProvider>(),
+              child: const BodyShopScreen(),
+            ),
+          ),
+        ),
+        child: Container(
+          height: 172,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF1A0608), Color(0xFF0E1118), Color(0xFF080A0F)],
+            ),
+            border: Border.all(color: AppTheme.border),
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                right: -16,
+                bottom: -16,
+                child: Icon(Icons.car_repair_rounded,
+                    size: 130, color: Colors.white.withOpacity(0.06)),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppTheme.redGlow,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: AppTheme.red),
+                      ),
+                      child: Text(s.bodyShopSectionTitle.toUpperCase(),
+                          style: AppTheme.mono(10,
+                              w: FontWeight.w700, color: AppTheme.red)),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(s.bodyShopHeroTitle,
+                        style: AppTheme.display(18, w: FontWeight.w900),
+                        maxLines: 2),
+                    const SizedBox(height: 5),
+                    Text(s.bodyShopSectionSub,
+                        style: AppTheme.body(11.5, color: AppTheme.white60),
+                        maxLines: 2),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(s.isEs ? 'Ver servicios' : 'View services',
+                            style: AppTheme.mono(11,
+                                w: FontWeight.w700, color: AppTheme.red)),
+                        const SizedBox(width: 4),
+                        const Icon(Icons.arrow_forward_rounded,
+                            color: AppTheme.red, size: 14),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    )
+        .animate(delay: 150.ms)
+        .fadeIn(duration: 500.ms)
+        .slideY(begin: 0.08, end: 0);
   }
 
   Widget _banner(s) => GestureDetector(

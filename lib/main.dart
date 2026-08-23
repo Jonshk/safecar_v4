@@ -19,6 +19,7 @@ import 'screens/contact_screen.dart';
 import 'screens/part_detail_screen.dart';
 import 'screens/tow_screen.dart';
 import 'screens/booking_screen.dart';
+import 'screens/body_shop_screen.dart';
 import 'models/models.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -125,9 +126,10 @@ class _MainShellState extends State<MainShell> {
       const BookingScreen(),
       const CartScreen(),
       const ContactScreen(),
+      const BodyShopScreen(),
     ];
 
-    final navActive = [0, 1, 4, 2, 3, -1, -1][_idx.clamp(0, 6)];
+    final navActive = [0, 1, 4, 2, 3, -1, -1, 5][_idx.clamp(0, 7)];
 
     return Scaffold(
       backgroundColor: AppTheme.bg,
@@ -203,6 +205,14 @@ class _MainShellState extends State<MainShell> {
                   index: 3,
                   current: navActive,
                   onTap: (_) => _navigate(4),
+                ),
+                _NavItem(
+                  icon: Icons.car_crash_outlined,
+                  activeIcon: Icons.car_crash_rounded,
+                  label: s.isEs ? 'Carrocería' : 'Body Shop',
+                  index: 5,
+                  current: navActive,
+                  onTap: (_) => _navigate(7),
                 ),
                 _NavItem(
                   icon: Icons.school_outlined,

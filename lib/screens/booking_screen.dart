@@ -5,10 +5,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:http/http.dart' as http;
 import '../theme/app_theme.dart';
 
-const _kBase = 'https://safecar-backend.onrender.com';
+const _kBase = 'https://safecar-backend.fly.dev';
 
 class BookingScreen extends StatefulWidget {
   const BookingScreen({super.key});
+  // Permite preseleccionar un service_type al navegar desde otra pantalla
+  // (ej. el banner de Body Shop en Home). Se consume una sola vez.
+  static String? presetServiceType;
   @override
   State<BookingScreen> createState() => _BookingScreenState();
 }
@@ -36,6 +39,19 @@ class _BookingScreenState extends State<BookingScreen> {
     ('diagnostics', 'Diagnostics', Icons.search_rounded),
     ('tire_rotation', 'Tire Rotation', Icons.rotate_right_rounded),
     ('general_repair', 'General Repair', Icons.build_rounded),
+    ('body_collision_repair', 'Collision Repair', Icons.car_crash_rounded),
+    (
+      'body_paint_refinishing',
+      'Paint & Refinishing',
+      Icons.format_paint_rounded
+    ),
+    ('body_dent_removal', 'Dent Removal', Icons.remove_circle_outline_rounded),
+    (
+      'body_frame_straightening',
+      'Frame Straightening',
+      Icons.straighten_rounded
+    ),
+    ('body_shop_estimate', 'Body Shop Estimate', Icons.receipt_long_rounded),
     ('other', 'Other Service', Icons.more_horiz_rounded),
   ];
 
@@ -49,6 +65,15 @@ class _BookingScreenState extends State<BookingScreen> {
     '15:00',
     '16:00'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (BookingScreen.presetServiceType != null) {
+      _serviceType = BookingScreen.presetServiceType!;
+      BookingScreen.presetServiceType = null;
+    }
+  }
 
   @override
   void dispose() {

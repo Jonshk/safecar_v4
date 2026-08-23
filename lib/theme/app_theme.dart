@@ -24,7 +24,7 @@ class AppTheme {
   static const Color white05 = Color(0x0DFFFFFF);
 
   // ── API ─────────────────────────────────────────────────────
-  static const String apiBase = 'https://safecar-backend.onrender.com';
+  static const String apiBase = 'https://safecar-backend.fly.dev';
   static const String stripeKey =
       'pk_live_51TNg9hJUWcw2TQhFw7mdxHFDOV6WsjsLgTQbFmHhybhiI4MtRxPpvYFWhpAO1VAFfal98asSYSU6cvTxP2WkCp9v00kl0jT7Qr';
 

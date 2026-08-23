@@ -1,190 +1,383 @@
-// lib/screens/chat_screen.dart
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
-import '../services/api_service.dart';
+import '../services/lang_provider.dart';
+import '../widgets/shared.dart';
 
-class ChatScreen extends StatefulWidget {
-  final int towId;
-  final String customerName;
-  const ChatScreen({super.key, required this.towId, required this.customerName});
+class ContactScreen extends StatelessWidget {
+  const ContactScreen({super.key});
 
-  @override
-  State<ChatScreen> createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
-  final _ctrl = TextEditingController();
-  final _scroll = ScrollController();
-  final List<Map<String, dynamic>> _messages = [];
-  int _lastId = 0;
-  bool _sending = false;
-  Timer? _poll;
-
-  @override
-  void initState() {
-    super.initState();
-    _load();
-    _poll = Timer.periodic(const Duration(seconds: 4), (_) => _load());
-  }
-
-  @override
-  void dispose() {
-    _poll?.cancel();
-    _ctrl.dispose();
-    _scroll.dispose();
-    super.dispose();
-  }
-
-  Future<void> _load() async {
-    final msgs = await ApiService.getChatMessages(widget.towId, afterId: _lastId);
-    if (msgs.isEmpty || !mounted) return;
-    setState(() {
-      _messages.addAll(msgs);
-      _lastId = msgs.last['id'] as int;
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scroll.hasClients) {
-        _scroll.animateTo(_scroll.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-      }
-    });
-  }
-
-  Future<void> _send() async {
-    final text = _ctrl.text.trim();
-    if (text.isEmpty || _sending) return;
-    setState(() => _sending = true);
-    _ctrl.clear();
-    final ok = await ApiService.sendChatMessage(
-      towId: widget.towId,
-      sender: 'client',
-      senderName: widget.customerName,
-      text: text,
-    );
-    setState(() => _sending = false);
-    if (ok) _load();
+  static Future<void> _launch(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri))
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   @override
   Widget build(BuildContext context) {
+    final s = context.watch<LangProvider>().s;
     return Scaffold(
       backgroundColor: AppTheme.bg,
-      appBar: AppBar(
-        title: const Text('Chat con el técnico'),
-        backgroundColor: AppTheme.bgCard,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _messages.isEmpty
-                ? Center(
-                    child: Text('Aún no hay mensajes.\nEscríbele al técnico.',
-                        style: AppTheme.body(14, color: AppTheme.white30),
-                        textAlign: TextAlign.center),
-                  )
-                : ListView.builder(
-                    controller: _scroll,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    itemCount: _messages.length,
-                    itemBuilder: (_, i) => _buildBubble(_messages[i]),
-                  ),
-          ),
-          _buildInput(),
-        ],
-      ),
-    );
-  }
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(s.contactTag,
+                style:
+                    AppTheme.mono(11, color: AppTheme.red, w: FontWeight.w700)),
+            Text(s.contactTitle,
+                style: AppTheme.display(28, w: FontWeight.w800)),
+            const SizedBox(height: 20),
 
-  Widget _buildBubble(Map<String, dynamic> msg) {
-    final isMe = msg['sender'] == 'client';
-    return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.72),
-        decoration: BoxDecoration(
-          color: isMe ? AppTheme.red : AppTheme.surface,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(16),
-            topRight: const Radius.circular(16),
-            bottomLeft: Radius.circular(isMe ? 16 : 4),
-            bottomRight: Radius.circular(isMe ? 4 : 16),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-          children: [
-            if (!isMe) ...[
-              Text(msg['sender_name'] ?? 'Técnico',
-                  style: AppTheme.mono(10, w: FontWeight.w700, color: AppTheme.red)),
-              const SizedBox(height: 3),
-            ],
-            Text(msg['text'] ?? '', style: AppTheme.body(14, color: Colors.white)),
-            const SizedBox(height: 3),
-            Text(
-              (msg['created_at'] as String?)?.substring(11, 16) ?? '',
-              style: AppTheme.body(10, color: Colors.white.withOpacity(0.45)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+            // ── WhatsApp CTA grande ────────────────────────────
+            _whatsappCTA(context, s),
+            const SizedBox(height: 16),
 
-  Widget _buildInput() {
-    return Container(
-      padding: EdgeInsets.only(
-        left: 12, right: 12, top: 10,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 12,
-      ),
-      decoration: BoxDecoration(
-        color: AppTheme.bgCard,
-        border: Border(top: BorderSide(color: AppTheme.border)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
+            // ── Redes sociales ─────────────────────────────────
+            _socialRow(),
+            const SizedBox(height: 24),
+
+            // ── Info cards ─────────────────────────────────────
+            _infoCard(context, Icons.phone_outlined, s.contactPhone,
+                '+1 (872) 361-1607', s.contactPhoneSub,
+                onTap: () => _launch('tel:+18723611607')),
+            const SizedBox(height: 12),
+            _infoCard(context, Icons.email_outlined, 'EMAIL',
+                'safecarautomotive@gmail.com', s.contactEmailSub,
+                onTap: () => _launch('mailto:safecarautomotive@gmail.com')),
+            const SizedBox(height: 12),
+            _infoCard(context, Icons.location_on_outlined, s.contactAddress,
+                '706 N Cicero Ave', 'Chicago, IL 60644',
+                onTap: () => _launch(
+                    'https://maps.google.com/?q=706+N+Cicero+Ave+Chicago+IL+60644')),
+            const SizedBox(height: 24),
+
+            // ── Horario ────────────────────────────────────────
+            const SectionHeader(label: 'HORARIO'),
+            const SizedBox(height: 14),
+            _hoursCard(s),
+            const SizedBox(height: 24),
+
+            // ── Nosotros ───────────────────────────────────────
+            SectionHeader(label: s.contactAbout),
+            const SizedBox(height: 14),
+            Container(
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: AppTheme.surface,
-                borderRadius: BorderRadius.circular(24),
+                color: AppTheme.bgCard,
+                borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: AppTheme.border),
               ),
-              child: TextField(
-                controller: _ctrl,
-                style: AppTheme.body(14),
-                maxLines: null,
-                textInputAction: TextInputAction.send,
-                onSubmitted: (_) => _send(),
-                decoration: InputDecoration(
-                  hintText: 'Escribe un mensaje...',
-                  hintStyle: AppTheme.body(13, color: AppTheme.white30),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                ),
-              ),
+              child: Text(s.contactAboutText,
+                  style: AppTheme.body(14, color: AppTheme.white80)),
+            ).animate().fadeIn(delay: 200.ms),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  // ── WhatsApp CTA ──────────────────────────────────────────────
+  Widget _whatsappCTA(BuildContext context, s) {
+    return GestureDetector(
+      onTap: () => _launch('https://wa.me/18723545706'),
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: const LinearGradient(
+            colors: [Color(0xFF075E54), Color(0xFF128C7E)],
+          ),
+          boxShadow: [
+            BoxShadow(
+                color: const Color(0xFF25D366).withOpacity(0.25),
+                blurRadius: 20,
+                offset: const Offset(0, 6)),
+          ],
+        ),
+        child: Row(children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: const Center(
+              child: _WhatsAppIcon(size: 28, color: Colors.white),
             ),
           ),
-          const SizedBox(width: 8),
-          GestureDetector(
-            onTap: _send,
-            child: Container(
+          const SizedBox(width: 14),
+          Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                Text(s.isEs ? 'Chat por WhatsApp' : 'Chat on WhatsApp',
+                    style: AppTheme.display(16, w: FontWeight.w800)),
+                const SizedBox(height: 3),
+                Text('+1 (872) 354-5706',
+                    style: AppTheme.mono(13,
+                        color: Colors.white.withOpacity(0.8))),
+                Text(
+                    s.isEs
+                        ? 'Respuesta rápida · Lun-Vie'
+                        : 'Quick reply · Mon-Fri',
+                    style: AppTheme.body(11,
+                        color: Colors.white.withOpacity(0.6))),
+              ])),
+          const Icon(Icons.arrow_forward_ios_rounded,
+              color: Colors.white54, size: 16),
+        ]),
+      ),
+    ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.08, end: 0);
+  }
+
+  // ── Social row ────────────────────────────────────────────────
+  Widget _socialRow() {
+    final socials = [
+      (
+        'Facebook',
+        'https://www.facebook.com/safecartallerautomotriz',
+        const Color(0xFF1877F2),
+        const _FbIcon()
+      ),
+      (
+        'Instagram',
+        'https://www.instagram.com/safecar.automotive',
+        const Color(0xFFE1306C),
+        const _IgIcon()
+      ),
+      (
+        'TikTok',
+        'https://www.tiktok.com/@safeeducations',
+        Colors.white,
+        const _TkIcon()
+      ),
+      (
+        'Google',
+        'https://www.google.com/search?q=Safe+Car+Chicago',
+        const Color(0xFF4285F4),
+        const _GgIcon()
+      ),
+    ];
+    return Row(
+        children: socials.asMap().entries.map((e) {
+      final i = e.key;
+      final s = e.value;
+      return Expanded(
+        child: GestureDetector(
+          onTap: () => _launch(s.$2),
+          child: Container(
+            margin: EdgeInsets.only(right: i < 3 ? 10 : 0),
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            decoration: BoxDecoration(
+              color: AppTheme.bgCard,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppTheme.border),
+            ),
+            child: Column(children: [
+              s.$4,
+              const SizedBox(height: 6),
+              Text(s.$1,
+                  style: AppTheme.mono(9,
+                      color: AppTheme.white60, w: FontWeight.w600)),
+            ]),
+          ),
+        )
+            .animate(delay: Duration(milliseconds: 60 * i))
+            .fadeIn()
+            .slideY(begin: 0.1, end: 0),
+      );
+    }).toList());
+  }
+
+  Widget _infoCard(BuildContext context, IconData icon, String label,
+      String value, String sub,
+      {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap ?? () => Clipboard.setData(ClipboardData(text: value)),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppTheme.bgCard,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppTheme.border),
+        ),
+        child: Row(children: [
+          Container(
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: AppTheme.red,
-                shape: BoxShape.circle,
-                boxShadow: [BoxShadow(color: AppTheme.red.withOpacity(0.4), blurRadius: 10)],
-              ),
-              child: _sending
-                  ? const Padding(padding: EdgeInsets.all(12), child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Icon(Icons.send_rounded, color: Colors.white, size: 20),
-            ),
-          ),
-        ],
+                  color: AppTheme.redGlow,
+                  borderRadius: BorderRadius.circular(12)),
+              child: Icon(icon, color: AppTheme.red, size: 20)),
+          const SizedBox(width: 14),
+          Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                Text(label,
+                    style: AppTheme.mono(9,
+                        color: AppTheme.white30, w: FontWeight.w700)),
+                const SizedBox(height: 2),
+                Text(value, style: AppTheme.display(14, w: FontWeight.w700)),
+                Text(sub, style: AppTheme.body(12, color: AppTheme.white60)),
+              ])),
+          Icon(onTap != null ? Icons.open_in_new_rounded : Icons.copy_outlined,
+              color: AppTheme.white30, size: 16),
+        ]),
       ),
+    ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.05, end: 0);
+  }
+
+  Widget _hoursCard(s) {
+    final hours = [
+      ('Mon - Fri', '7:30 AM – 5:30 PM'),
+      ('Sat', s.contactClosed),
+      ('Sun', s.contactClosed),
+    ];
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.bgCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.border),
+      ),
+      child: Column(
+          children: hours
+              .map((h) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(h.$1,
+                              style:
+                                  AppTheme.body(14, color: AppTheme.white80)),
+                          Text(h.$2,
+                              style: h.$2 == s.contactClosed
+                                  ? AppTheme.mono(12,
+                                      color: AppTheme.red, w: FontWeight.w700)
+                                  : AppTheme.mono(12,
+                                      color: AppTheme.white80,
+                                      w: FontWeight.w600)),
+                        ]),
+                  ))
+              .toList()),
     );
   }
+}
+
+// ── Social icons SVG ──────────────────────────────────────────────
+class _WhatsAppIcon extends StatelessWidget {
+  final double size;
+  final Color color;
+  const _WhatsAppIcon({this.size = 20, this.color = const Color(0xFF25D366)});
+  @override
+  Widget build(BuildContext context) =>
+      CustomPaint(size: Size(size, size), painter: _WAPainter(color));
+}
+
+class _WAPainter extends CustomPainter {
+  final Color color;
+  _WAPainter(this.color);
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+    final path = Path();
+    final s = size.width / 24.0;
+    path.addOval(
+        Rect.fromCircle(center: Offset(12 * s, 12 * s), radius: 11 * s));
+    canvas.drawPath(path, p);
+    final wp = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+    final wPath = Path();
+    wPath.moveTo(17.472 * s, 14.382 * s);
+    wPath.cubicTo(
+        17.175 * s, 14.233 * s, 15.714 * s, 13.515 * s, 15.442 * s, 13.415 * s);
+    wPath.cubicTo(
+        15.169 * s, 13.316 * s, 14.971 * s, 13.267 * s, 14.772 * s, 13.565 * s);
+    wPath.close();
+    canvas.drawCircle(Offset(12 * s, 12 * s), 8 * s, Paint()..color = color);
+    final iconPaint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 1.2 * s
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+    canvas.drawLine(Offset(8 * s, 12 * s), Offset(16 * s, 12 * s), iconPaint);
+    canvas.drawLine(Offset(8 * s, 9 * s), Offset(16 * s, 9 * s), iconPaint);
+    canvas.drawLine(Offset(8 * s, 15 * s), Offset(13 * s, 15 * s), iconPaint);
+  }
+
+  @override
+  bool shouldRepaint(_) => false;
+}
+
+class _FbIcon extends StatelessWidget {
+  const _FbIcon();
+  @override
+  Widget build(BuildContext context) =>
+      const Icon(Icons.facebook_rounded, color: Color(0xFF1877F2), size: 24);
+}
+
+class _IgIcon extends StatelessWidget {
+  const _IgIcon();
+  @override
+  Widget build(BuildContext context) => Container(
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFFF58529),
+              Color(0xFFDD2A7B),
+              Color(0xFF8134AF),
+              Color(0xFF515BD4)
+            ],
+          ),
+        ),
+        child: const Icon(Icons.camera_alt_outlined,
+            color: Colors.white, size: 14),
+      );
+}
+
+class _TkIcon extends StatelessWidget {
+  const _TkIcon();
+  @override
+  Widget build(BuildContext context) => Container(
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+            color: Colors.black, borderRadius: BorderRadius.circular(6)),
+        child: const Center(
+            child:
+                Text('♪', style: TextStyle(color: Colors.white, fontSize: 14))),
+      );
+}
+
+class _GgIcon extends StatelessWidget {
+  const _GgIcon();
+  @override
+  Widget build(BuildContext context) => Container(
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(6)),
+        child: const Center(
+          child: Text('G',
+              style: TextStyle(
+                  color: Color(0xFF4285F4),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900)),
+        ),
+      );
 }

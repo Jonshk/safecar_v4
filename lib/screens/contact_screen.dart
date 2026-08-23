@@ -51,9 +51,9 @@ class ContactScreen extends StatelessWidget {
                 onTap: () => _launch('mailto:safecarautomotive@gmail.com')),
             const SizedBox(height: 12),
             _infoCard(context, Icons.location_on_outlined, s.contactAddress,
-                '1052 W 51st St', 'Chicago, IL 60609',
+                '706 N Cicero Ave', 'Chicago, IL 60644',
                 onTap: () => _launch(
-                    'https://maps.google.com/?q=1052+W+51st+St+Chicago+IL+60609')),
+                    'https://maps.google.com/?q=706+N+Cicero+Ave+Chicago+IL+60644')),
             const SizedBox(height: 24),
 
             // ── Horario ────────────────────────────────────────
